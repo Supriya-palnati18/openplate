@@ -1,0 +1,26 @@
+ 
+# Dependencies
+node_modules/
+
+# Environment variables - never commit these
+.env
+.env.local
+
+# SQLite database file
+*.db
+*.sqlite
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Vite cache
+.vite/
