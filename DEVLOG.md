@@ -23,5 +23,11 @@ A living document of every decision made, every problem solved, and every concep
 - Node.js doesn't need virtual environments like Python because npm installs packages locally inside `node_modules/` by default
 - Global Git identity controls your name/email. The remote URL controls WHERE code is pushed.
 - PAT embedded in remote URL guarantees the correct GitHub account is used on shared machines
-
+- Common types used in real teams:
+    init — project setup
+    feat — new feature added
+    fix — bug fixed
+    refactor — code restructured, no behaviour change
+    docs — documentation only
+    chore — maintenance, config changes
 ---
