@@ -31,3 +31,35 @@ A living document of every decision made, every problem solved, and every concep
     docs — documentation only
     chore — maintenance, config changes
 ---
+## Day 2 — 02 April 2026
+
+### What we built
+- Created client/ using React + Vite
+- Created server/ with Node.js + Express from scratch
+- Built first API endpoint — GET /health
+- Created full folder structure: routes, controllers, middleware, models, config
+- Set up .env for environment variables
+- Verified .gitignore protecting node_modules and .env
+
+### Commands learned
+- `npm create vite@latest client -- --template react` — scaffold React app
+- `npm init -y` — initialise a Node project
+- `npm install express` — install a package as dependency
+- `npm install -D nodemon dotenv` — install as dev dependency
+- `npm run dev` — run nodemon server
+- `git add .` — stage all untracked files
+
+### Concepts learned
+- Node.js doesn't need virtual environments — npm installs locally by default
+- Two separate package.json files — client and server are independent projects
+- MVC pattern — routes, controllers, models separation
+- .env files store secrets — never committed to Git
+- Empty folders are invisible to Git — need a file inside to track
+- nodemon watches files and restarts server automatically on save
+- express.json() middleware needed to parse incoming request bodies
+- Health check endpoint — standard practice in every real API
+
+### Decisions made
+- Kept client and server completely separate — clear boundary, mirrors real teams
+- Used require() not import — standard CommonJS for Node.js backend
+- PORT defaults to 5000 locally, reads from environment in production
