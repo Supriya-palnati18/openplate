@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String
+  name        String
+  role        String        @default("CUSTOMER")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  chefProfile ChefProfile?
+  posts       ProcessPost[]
+  orders      Order[]
+}
+
+model ChefProfile {
+  id          Int           @id @default(autoincrement())
+  userId      Int           @unique
+  bio         String
+  location    String
+  cuisineType String
+  isVerified  Boolean       @default(false)
+  trustScore  Float         @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id])
+  posts       ProcessPost[]
+}
+
+model ProcessPost {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String
+  ingredients String
+  steps       String
+  imageUrl    String?
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  authorId    Int
+  chefId      Int
+  author      User        @relation(fields: [authorId], references: [id])
+  chef        ChefProfile @relation(fields: [chefId], references: [id])
+  orders      Order[]
+}
+
+model Order {
+  id          Int          @id @default(autoincrement())
+  status      String       @default("PENDING")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  customerId  Int
+  postId      Int
+  customer    User         @relation(fields: [customerId], references: [id])
+  post        ProcessPost  @relation(fields: [postId], references: [id])
+  liveSession LiveSession?
+}
+
+model LiveSession {
+  id        Int       @id @default(autoincrement())
+  status    String    @default("SCHEDULED")
+  startedAt DateTime?
+  endedAt   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  orderId   Int       @unique
+  order     Order     @relation(fields: [orderId], references: [id])
+}

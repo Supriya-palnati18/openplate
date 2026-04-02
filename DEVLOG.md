@@ -63,3 +63,85 @@ A living document of every decision made, every problem solved, and every concep
 - Kept client and server completely separate — clear boundary, mirrors real teams
 - Used require() not import — standard CommonJS for Node.js backend
 - PORT defaults to 5000 locally, reads from environment in production
+
+---
+
+## Day 3 — 02 April 2026
+
+### What we built
+- Installed and configured Prisma ORM
+- Designed full database schema — User, ChefProfile, ProcessPost, Order, LiveSession
+- Ran first migration and read every line of generated SQL
+- Connected Prisma Client to SQLite database
+- Verified database connection through /health endpoint
+
+### The battle — Prisma 7 vs Prisma 5
+We initially installed Prisma 7 (latest) and hit multiple breaking changes:
+
+Problem 1 — Prisma 7 moved DATABASE_URL out of schema.prisma into prisma.config.ts
+Fix — removed url from datasource block in schema.prisma
+
+Problem 2 — Prisma 7 new generator (prisma-client) outputs TypeScript files only
+Fix — changed generator provider from "prisma-client" to "prisma-client-js"
+
+Problem 3 — Prisma 7 engine type "client" requires adapter or accelerateUrl
+This means Prisma 7 no longer supports direct SQLite connection in CommonJS
+Fix — downgraded to Prisma 5 which is stable, widely used, and works perfectly with SQLite + CommonJS + Node.js
+
+Lesson — newest version is not always the right version. Prisma 7 is designed for TypeScript-first projects with edge adapters. Prisma 5 is the right choice for our Node.js + SQLite + CommonJS stack.
+
+### Database schema designed — 5 tables
+
+User — stores all users. role field handles CUSTOMER, CHEF, ADMIN
+ChefProfile — extra data for chef users. 1:1 with User
+ProcessPost — chef's cooking process posts. Many customers can order one post
+Order — created when customer orders a post. Links customer to post
+LiveSession — created after an order. Chef goes live for that specific customer. 1:1 with Order
+
+### Key SQL concepts learned from migration file
+- PRIMARY KEY AUTOINCREMENT — database assigns id automatically
+- NOT NULL — field is required, cannot be empty
+- DEFAULT value — used when field not provided
+- FOREIGN KEY — links one table to another
+- ON DELETE RESTRICT — blocks deletion if related records exist
+- ON UPDATE CASCADE — automatically updates linked records
+- UNIQUE INDEX — enforces uniqueness AND speeds up lookups
+
+### Key Prisma concepts learned
+- schema.prisma — defines your tables in readable language
+- prisma migrate dev — reads schema, generates SQL, applies it to database
+- migration.sql — the actual SQL Prisma generated, always readable
+- npx prisma generate — generates the PrismaClient runtime code
+- PrismaClient singleton — create once, reuse everywhere. Multiple instances = connection overload
+- @prisma/client — the runtime package your app uses
+- prisma (devDependency) — the CLI tool for migrations and generation
+
+### Singleton pattern
+Created server/config/prisma.js that creates one PrismaClient instance
+and exports it. Every file that needs the database imports this one instance.
+This prevents connection pool exhaustion under load.
+
+### Correct file structure for Prisma 5 + SQLite
+- DATABASE_URL in .env as: file:./dev.db
+- url = env("DATABASE_URL") in schema.prisma datasource block
+- require('dotenv').config() at the very top of index.js before any other require
+- PrismaClient imported from '@prisma/client' with no constructor arguments
+- npx prisma generate must be run after any schema change
+
+### Commands learned
+- npx prisma init --datasource-provider sqlite — initialise Prisma
+- npx prisma migrate dev --name <name> — create and apply migration
+- npx prisma generate — generate/regenerate Prisma Client
+- npm uninstall / npm install — downgrade packages when needed
+
+### What the /health endpoint now does
+Pings the database with SELECT 1 — the simplest possible query
+Returns database: connected if successful
+Returns database: disconnected with error reason if not
+This is standard practice in real production APIs
+
+### Decisions made
+- Prisma 5 over Prisma 7 — stability over latest for learning project
+- SQLite for development — single file database, zero configuration
+- dotenv loaded first in index.js — ensures env vars available before PrismaClient
+- CommonJS (require) not ESM (import) — standard for Node.js backends
