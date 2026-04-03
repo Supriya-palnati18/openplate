@@ -145,3 +145,54 @@ This is standard practice in real production APIs
 - SQLite for development — single file database, zero configuration
 - dotenv loaded first in index.js — ensures env vars available before PrismaClient
 - CommonJS (require) not ESM (import) — standard for Node.js backends
+
+---
+
+## Day 4 — 02 April 2026
+
+### What we built
+- Complete auth system — register, login, logout
+- Password hashing with bcryptjs
+- JWT token creation with jsonwebtoken
+- HttpOnly cookie for secure token storage
+- cookie-parser middleware wired into Express
+- Auth routes mounted at /api/auth
+
+### Endpoints built
+- POST /api/auth/register — validates input, checks duplicate email, hashes password, saves user
+- POST /api/auth/login — verifies password, creates JWT, sets HttpOnly cookie
+- POST /api/auth/logout — clears the cookie
+
+### Packages installed
+- bcryptjs — pure JS password hashing, works on all platforms
+- jsonwebtoken — creates and verifies JWT tokens
+- cookie-parser — lets Express read cookies from incoming requests
+
+### Key decisions made
+- bcryptjs over bcrypt — no native compilation needed, works on Windows
+- HttpOnly cookie over localStorage — JavaScript cannot read it, prevents XST attacks
+- Same error message for wrong email and wrong password — prevents user enumeration
+- JWT payload contains id, email, role — everything middleware needs without a DB call
+- secure: true only in production — allows http://localhost in development
+- maxAge matches JWT expiresIn — both 7 days, always keep in sync
+
+### Bugs fixed
+- bcrypt vs bcryptjs — module name matters exactly
+- Table not found — had to re-run migration after switching Prisma versions
+
+### What I learned
+- async/await — await pauses the function not the server, Node handles other requests meanwhile
+- bcrypt salt — random string added to password before hashing, stored inside hash itself
+- cost factor 10 — 1024 rounds, intentionally slow to defeat brute force
+- JWT — signed ID card, three parts: header.payload.signature
+- stateless auth — server stores nothing, token carries everything
+- HttpOnly cookie — browser handles it, JavaScript cannot touch it
+- sameSite strict — blocks CSRF attacks from other domains
+- MVC in action — routes file only maps URLs, controller has all the logic
+
+### How to test auth
+- POST /api/auth/register with { name, email, password, role }
+- POST /api/auth/login with { email, password }
+- POST /api/auth/logout — no body needed
+- Use Thunder Client in VS Code to test all endpoints
+- Use npx prisma studio to view database records visually
