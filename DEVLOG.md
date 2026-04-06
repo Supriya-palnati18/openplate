@@ -196,3 +196,50 @@ This is standard practice in real production APIs
 - POST /api/auth/logout — no body needed
 - Use Thunder Client in VS Code to test all endpoints
 - Use npx prisma studio to view database records visually
+
+---
+
+## Day 5 — 06 April 2026
+
+### What we built
+- Auth middleware — protect and restrictTo functions
+- GET /api/auth/me — returns current logged in user
+- Role-based access control (RBAC) working
+
+### How middleware works
+- Sits between request and controller
+- Reads JWT from HttpOnly cookie via req.cookies.token
+- Verifies token with jwt.verify() using JWT_SECRET
+- If valid — attaches decoded user to req.user — passes to controller
+- If invalid/missing — returns 401 immediately, controller never runs
+
+### Two middleware functions built
+- protect — checks if user is logged in
+- restrictTo(...roles) — checks if user has required role
+
+### How to protect any route
+- router.get('/route', protect, controller) — login required
+- router.get('/route', protect, restrictTo('ADMIN'), controller) — admin only
+- router.get('/route', protect, restrictTo('ADMIN', 'CHEF'), controller) — either role
+
+### Status codes learned
+- 401 Unauthorized — not logged in, no token
+- 403 Forbidden — logged in but wrong role
+- Frontend handles these differently — 401 redirects to login, 403 shows access denied
+
+### What req.user contains after middleware
+- id, email, role — everything decoded from JWT
+- No database call needed — token carries everything
+- Controllers access req.user.id, req.user.role directly
+
+### Prisma select
+- select: { id: true, name: true } — returns only specified fields
+- Excludes password automatically — safer than manually removing it
+- Always use select when returning user data to client
+
+### process.env explained
+- process is Node's global object — always available, never imported
+- process.env holds all environment variables
+- require('dotenv').config() loads .env into process.env
+- Must be first line in index.js — before any other require
+- In production — platform sets env vars directly, no .env file needed
