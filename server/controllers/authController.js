@@ -100,8 +100,30 @@ const logout = (req,res) =>{
     res.json({message:'Logout successful'});
 }
 
+const getMe = async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true
+      }
+    })
+
+    res.json({ user })
+
+  } catch (error) {
+    console.error('GetMe error:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
 module.exports ={
     register,
     login,
-    logout
+    logout,
+    getMe
 }
