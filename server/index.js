@@ -3,6 +3,7 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const prisma = require('./config/prisma')
 const authRoutes = require('./routes/auth')
+const chefRoutes = require('./routes/chef')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -11,6 +12,8 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/api/auth', authRoutes)
+app.use('/api/chef', chefRoutes)
+
 
 app.get('/health', async (req, res) => {
   try {
