@@ -243,3 +243,50 @@ This is standard practice in real production APIs
 - require('dotenv').config() loads .env into process.env
 - Must be first line in index.js — before any other require
 - In production — platform sets env vars directly, no .env file needed
+
+---
+
+## Day 6 — 07 April 2026
+
+### What we built
+- Chef Profile API — create, get own, get by id, update
+- Four endpoints following REST conventions
+- Role automatically upgraded from CUSTOMER to CHEF on profile creation
+
+### Endpoints built
+- POST /api/chef/profile — create chef profile (protected)
+- GET /api/chef/profile — get own profile (protected)
+- GET /api/chef/:id — get any chef's public profile (public)
+- PUT /api/chef/profile — partial update profile (protected)
+
+### Key concepts learned
+
+#### req.params vs req.body vs req.user
+- req.params — values from URL like /:id — always strings, use parseInt()
+- req.body — values from JSON request body — correct types preserved
+- req.user — values decoded from JWT by middleware — correct types preserved
+
+#### Prisma include
+- include: { user: { select: {...} } } — joins related table in one query
+- Avoids N+1 queries — one database call instead of two
+- select inside include — controls which fields from related table to return
+
+#### Conditional spread for partial updates
+- ...(value && { key: value }) — only adds field if value exists
+- Prevents accidentally wiping existing data with undefined
+- Clean pattern for PATCH/PUT endpoints
+
+#### Public vs protected routes — product decision
+- Ask: does the server need to know WHO is making this request?
+- Yes → protect middleware required
+- No → public route, no middleware
+- Even public routes limit exposed data — never return email or sensitive fields
+
+#### Two database operations in one controller
+- prisma.user.update — upgrade role to CHEF
+- prisma.chefProfile.create — create profile
+- Both in same function, keeping user experience simple
+
+### Commands used
+- npx prisma studio — visual database viewer, always run from server/ folder
+- Cookie header workaround — token=value when Thunder Client free doesn't persist cookies
