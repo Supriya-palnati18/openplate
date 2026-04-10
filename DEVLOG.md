@@ -290,3 +290,57 @@ This is standard practice in real production APIs
 ### Commands used
 - npx prisma studio — visual database viewer, always run from server/ folder
 - Cookie header workaround — token=value when Thunder Client free doesn't persist cookies
+
+
+---
+
+## Day 7 — 10 April 2026
+
+### What we built
+- Process Posts API — full CRUD plus publish/unpublish
+- Six endpoints covering complete post lifecycle
+- Ownership checks on update, delete, publish
+
+### Endpoints built
+- GET  /api/posts          — browse all published posts (public)
+- GET  /api/posts/:id      — view single post with full chef details (public)
+- POST /api/posts          — create post (CHEF only)
+- PUT  /api/posts/:id      — update own post (CHEF only)
+- DELETE /api/posts/:id    — delete own post (CHEF only)
+- PATCH /api/posts/:id/publish — toggle publish/unpublish (CHEF only)
+
+### Key concepts learned
+
+#### Resource ownership check
+- Always fetch the resource first, then compare authorId with req.user.id
+- Return 403 if they don't match — cannot edit someone else's content
+- This pattern applies to any user-owned resource
+
+#### Draft vs published system
+- isPublished: false = draft, only visible to chef
+- isPublished: true = live, visible to all customers
+- togglePublish uses !post.isPublished to flip the boolean
+- getAllPosts filters where: { isPublished: true } — drafts never leak
+
+#### Different data per endpoint
+- getAllPosts — minimal data, fast loading for feed
+- getPostById — full data including chef bio and isVerified
+- Return only what each view needs — no more, no less
+
+#### Prisma findMany options
+- where — filter records
+- include — join related tables
+- orderBy — sort results, desc = newest first
+- select inside include — control fields from joined table
+
+#### Why imageUrl is optional
+- Schema has String? — nullable field
+- Not required for post to make sense
+- Video/image upload is a separate feature — Cloudinary + Multer
+- Database stores URL string either way
+
+#### restrictTo on write operations
+- GET routes — public, no auth needed
+- POST/PUT/DELETE/PATCH — protect + restrictTo('CHEF')
+- Customers cannot create posts even if logged in
+- Double protection — must be authenticated AND correct rolegit add DEVLOG.md
