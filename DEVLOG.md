@@ -344,3 +344,69 @@ This is standard practice in real production APIs
 - POST/PUT/DELETE/PATCH — protect + restrictTo('CHEF')
 - Customers cannot create posts even if logged in
 - Double protection — must be authenticated AND correct rolegit add DEVLOG.md
+
+---
+
+## Day 8 — 11 April 2026
+
+### What we built
+- Orders API — complete order lifecycle
+- Live Session API — session management
+- Price field added to ProcessPost
+- paymentStatus and amount fields added to Order
+- Complete end to end flow tested
+
+### Endpoints built
+
+#### Orders
+- POST /api/orders — customer places order (CUSTOMER only)
+- GET /api/orders/my — customer sees their orders
+- GET /api/orders/chef — chef sees received orders (CHEF only)
+- PATCH /api/orders/:id/confirm — chef confirms → LiveSession auto-created
+- PATCH /api/orders/:id/cancel — both chef or customer can cancel
+
+#### Live Sessions
+- GET /api/sessions/:id — get session details (chef or customer only)
+- PATCH /api/sessions/:id/start — chef goes live, startedAt recorded
+- PATCH /api/sessions/:id/end — chef ends, endedAt recorded, order COMPLETED
+
+### Complete flow tested
+Customer orders → Chef confirms (LiveSession created) → 
+Chef starts session (LIVE) → Chef ends session (ENDED + Order COMPLETED)
+
+### Key concepts learned
+
+#### Two operations in one endpoint
+- confirmOrder: updates order status AND creates LiveSession atomically
+- endSession: updates session AND completes order in same request
+- Keeps data consistent — impossible to have confirmed order without a session
+
+#### Flexible ownership
+- cancelOrder — both chef AND customer can cancel
+- isCustomer = order.customerId === req.user.id
+- isChef = chefProfile && order.post.chefId === chefProfile.id
+- if (!isCustomer && !isChef) → 403
+
+#### Status guards
+- Always check current status before changing it
+- Cannot confirm already confirmed order
+- Cannot start already live session
+- Cannot end session that isn't live
+- Prevents invalid state transitions
+
+#### Price capture at order time
+- amount: post.price captured when order is created
+- Even if chef changes price later — existing orders keep original price
+- Same pattern used by every e-commerce platform
+
+#### SQLite migration strategy
+- Adding columns creates new table, copies data, drops old, renames new
+- PRAGMA foreign_keys=OFF during restructure
+- INSERT INTO ... SELECT FROM preserves all existing rows
+- New columns get DEFAULT values for existing rows automatically
+
+### Planned next
+- Connect React frontend to backend
+- Phase 3 — forgot password + OTP email
+- Phase 4 — Razorpay payment integration
+- Video streaming — WebRTC or Agora for actual live video
