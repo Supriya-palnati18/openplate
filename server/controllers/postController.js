@@ -2,7 +2,7 @@ const prisma = require('../config/prisma')
 
 const createPost = async (req, res) => {
   try {
-    const { title, description, ingredients, steps, imageUrl } = req.body
+    const { title, description, ingredients, steps, imageUrl, price } = req.body
 
     if (!title || !description || !ingredients || !steps) {
       return res.status(400).json({
@@ -27,6 +27,7 @@ const createPost = async (req, res) => {
         ingredients,
         steps,
         imageUrl: imageUrl || null,
+        price: price || 0,
         authorId: req.user.id,
         chefId: chefProfile.id
       }
@@ -104,7 +105,7 @@ const getPostById = async (req, res) => {
 const updatePost = async (req, res) => {
   try {
     const { id } = req.params
-    const { title, description, ingredients, steps, imageUrl } = req.body
+    const { title, description, ingredients, steps, imageUrl, price} = req.body
 
     const post = await prisma.processPost.findUnique({
       where: { id: parseInt(id) }
@@ -127,7 +128,8 @@ const updatePost = async (req, res) => {
         ...(description && { description }),
         ...(ingredients && { ingredients }),
         ...(steps && { steps }),
-        ...(imageUrl && { imageUrl })
+        ...(imageUrl && { imageUrl }),
+        ...(price !== undefined && { price })
       }
     })
 

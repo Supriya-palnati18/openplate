@@ -41,6 +41,7 @@ model ProcessPost {
   ingredients String
   steps       String
   imageUrl    String?
+  price       Float       @default(0)
   isPublished Boolean     @default(false)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -52,15 +53,17 @@ model ProcessPost {
 }
 
 model Order {
-  id          Int          @id @default(autoincrement())
-  status      String       @default("PENDING")
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  customerId  Int
-  postId      Int
-  customer    User         @relation(fields: [customerId], references: [id])
-  post        ProcessPost  @relation(fields: [postId], references: [id])
-  liveSession LiveSession?
+  id            Int          @id @default(autoincrement())
+  status        String       @default("PENDING")
+  paymentStatus String       @default("UNPAID")
+  amount        Float        @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  customerId    Int
+  postId        Int
+  customer      User         @relation(fields: [customerId], references: [id])
+  post          ProcessPost  @relation(fields: [postId], references: [id])
+  liveSession   LiveSession?
 }
 
 model LiveSession {

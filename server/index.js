@@ -5,6 +5,8 @@ const prisma = require('./config/prisma')
 const authRoutes = require('./routes/auth')
 const chefRoutes = require('./routes/chef')
 const postRoutes = require('./routes/post')
+const orderRoutes = require('./routes/order')
+const sessionRoutes = require('./routes/session')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -15,6 +17,8 @@ app.use(cookieParser())
 app.use('/api/auth', authRoutes)
 app.use('/api/chef', chefRoutes)
 app.use('/api/posts', postRoutes)
+app.use('/api/orders', orderRoutes)
+app.use('/api/sessions', sessionRoutes)
 
 
 app.get('/health', async (req, res) => {
