@@ -410,3 +410,64 @@ Chef starts session (LIVE) → Chef ends session (ENDED + Order COMPLETED)
 - Phase 3 — forgot password + OTP email
 - Phase 4 — Razorpay payment integration
 - Video streaming — WebRTC or Agora for actual live video
+
+---
+
+## Day 9 — 11 April 2026
+
+### What we built
+- Complete React frontend foundation
+- Design system with CSS variables — light and dark theme
+- Reusable Button and Input components with CSS Modules
+- Navbar with logo, theme toggle, auth state
+- Login page — connects to real backend
+- Register page — role selector, auto-login after register
+- Service layer — all API calls centralised
+- Theme context and Auth context
+
+### Design system decisions
+- CSS variables in :root — change one value, entire app updates
+- [data-theme='dark'] — dark mode via single attribute on html element
+- CSS Modules — scoped styles, no conflicts between components
+- All spacing, colors, shadows, radius as variables — consistent everywhere
+
+### Service layer pattern
+- All API calls in services/ folder — never call axios directly in components
+- One function per endpoint — login(), register(), getMe() etc.
+- If endpoint changes — fix one line in service file only
+- Components stay clean — they call functions, not HTTP methods
+
+### How frontend talks to backend
+- axios sends HTTP request with JSON body
+- Content-Type: application/json set automatically by axios
+- Vite proxy forwards /api/* requests to localhost:5000
+- express.json() middleware parses JSON body into req.body
+- withCredentials: true sends cookies automatically on every request
+
+### Key React concepts used
+- useState — stores form data, error, loading state
+- useContext — reads theme and auth from context without prop drilling
+- useNavigate — programmatic navigation after login/register
+- e.preventDefault() — stops browser default form submit behaviour
+- [e.target.name] — dynamic key, one handleChange handles all inputs
+
+### Role based redirect after login
+- CHEF → /chef/dashboard
+- CUSTOMER → /feed
+- ADMIN → /admin (planned)
+
+### Files created
+- src/index.css — design tokens (CSS variables)
+- src/context/ThemeContext.jsx — theme state, toggle, localStorage persistence
+- src/context/AuthContext.jsx — user state, login, logout
+- src/services/api.js — axios instance with baseURL and withCredentials
+- src/services/authService.js — register, login, logout, getMe
+- src/services/chefService.js — chef profile API calls
+- src/services/postService.js — process posts API calls
+- src/services/orderService.js — orders API calls
+- src/services/sessionService.js — live session API calls
+- src/components/ui/Button.jsx + Button.module.css
+- src/components/ui/Input.jsx + Input.module.css
+- src/components/layout/Navbar.jsx + Navbar.module.css
+- src/pages/auth/LoginPage.jsx + LoginPage.module.css
+- src/pages/auth/RegisterPage.jsx + RegisterPage.module.css
