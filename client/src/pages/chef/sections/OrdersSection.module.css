@@ -1,0 +1,100 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.empty {
+  text-align: center;
+  padding: var(--space-10);
+  color: var(--text-muted);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.orderCard {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.orderHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.orderTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.statusBadge {
+  font-size: 0.75rem;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.statusPending {
+  background-color: rgba(251, 140, 0, 0.12);
+  color: var(--warning);
+}
+
+.statusConfirmed {
+  background-color: rgba(76, 175, 80, 0.12);
+  color: var(--success);
+}
+
+.statusCompleted {
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+}
+
+.statusCancelled {
+  background-color: rgba(229, 57, 53, 0.08);
+  color: var(--error);
+}
+
+.orderMeta {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.metaLabel {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.orderActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+@media (max-width: 600px) {
+  .orderHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}

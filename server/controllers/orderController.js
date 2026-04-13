@@ -87,7 +87,7 @@ const getChefOrders = async (req, res) => {
       },
       include: {
         post: {
-          select: { title: true }
+          select: { title: true, isLive: true }
         },
         customer: {
           select: { id: true, name: true, email: true }
@@ -114,7 +114,7 @@ const confirmOrder = async (req, res) => {
     const order = await prisma.order.findUnique({
       where: { id: parseInt(id) },
       include: {
-        post: { select: { chefId: true } }
+        post: { select: { chefId: true, isLive: true } }
       }
     })
 
@@ -139,17 +139,23 @@ const confirmOrder = async (req, res) => {
       data: { status: 'CONFIRMED' }
     })
 
-    const liveSession = await prisma.liveSession.create({
-      data: {
-        orderId: parseInt(id),
-        status: 'SCHEDULED'
-      }
-    })
+    if (order.post.isLive) {
+      const liveSession = await prisma.liveSession.create({
+        data: {
+          orderId: parseInt(id),
+          status: 'SCHEDULED'
+        }
+      })
+      return res.json({
+        message: 'Order confirmed. Live session scheduled.',
+        order: updatedOrder,
+        liveSession
+      })
+    }
 
     res.json({
-      message: 'Order confirmed. Live session scheduled.',
-      order: updatedOrder,
-      liveSession
+      message: 'Order confirmed.',
+      order: updatedOrder
     })
 
   } catch (error) {

@@ -41,6 +41,8 @@ model ProcessPost {
   ingredients String
   steps       String
   imageUrl    String?
+  videoUrl    String?
+  isLive      Boolean  @default(false)
   price       Float       @default(0)
   isPublished Boolean     @default(false)
   createdAt   DateTime    @default(now())

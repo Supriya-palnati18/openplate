@@ -1,0 +1,105 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.empty {
+  text-align: center;
+  padding: var(--space-10);
+  color: var(--text-muted);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.postCard {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.postInfo {
+  flex: 1;
+}
+
+.postTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.postPrice {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgePublished {
+  background-color: rgba(76, 175, 80, 0.12);
+  color: var(--success);
+}
+
+.badgeDraft {
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+}
+
+.badgeLive {
+  background-color: rgba(229, 57, 53, 0.1);
+  color: var(--error);
+}
+
+.postActions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .postCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .postActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
