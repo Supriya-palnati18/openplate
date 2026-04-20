@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getAllPosts } from '../../services/postService'
 import { createOrder } from '../../services/orderService'
 import { useAuth } from '../../context/AuthContext'
@@ -13,6 +14,7 @@ function CustomerFeed() {
   const [orderingId, setOrderingId] = useState(null)
   const [modal, setModal] = useState(null)
   const { user } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -28,20 +30,24 @@ function CustomerFeed() {
     fetchPosts()
   }, [])
 
-  const handleOrder = async (postId) => {
-    setOrderingId(postId)
+ const handleOrder = async (post) => {
+    if (!post.isLive) {
+      navigate(`/posts/${post.id}`)
+      return
+    }
+    setOrderingId(post.id)
     try {
-      await createOrder(postId)
+      await createOrder(post.id)
       setModal({
         icon: '🎉',
         title: 'Order placed!',
-        message: 'The chef will review your order and confirm shortly. You will be notified when your live cooking session is scheduled.'
+        message: 'The chef will confirm and go live to cook your order.'
       })
     } catch (err) {
       setModal({
         icon: '❌',
         title: 'Order failed',
-        message: err.response?.data?.message || 'Failed to place order. Please try again.'
+        message: err.response?.data?.message || 'Failed to place order.'
       })
     } finally {
       setOrderingId(null)
@@ -109,9 +115,13 @@ function CustomerFeed() {
                   variant="primary"
                   fullWidth
                   disabled={orderingId === post.id}
-                  onClick={() => handleOrder(post.id)}
+                  onClick={() => handleOrder(post)}
                 >
-                  {orderingId === post.id ? 'Placing order...' : 'Order & Watch Live'}
+                  {orderingId === post.id
+                    ? 'Placing order...'
+                    : post.isLive
+                      ? '🔴 Order & Watch Live'
+                      : '👁️ View & Order'}
                 </Button>
               </div>
             </div>

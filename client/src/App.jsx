@@ -1,10 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
+import AppLayout from './components/layout/AppLayout'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import HomePage from './pages/home/HomePage'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import ChefDashboard from './pages/chef/ChefDashboard'
 import CustomerFeed from './pages/customer/CustomerFeed'
+import PostDetailPage from './pages/posts/PostDetailPage'
 
 function App() {
   return (
@@ -14,8 +17,36 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/chef/dashboard" element={<ChefDashboard />} />
-        <Route path="/feed" element={<CustomerFeed />} />
+        <Route
+          path="/feed"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <CustomerFeed />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/posts/:id"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <PostDetailPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chef/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['CHEF', 'ADMIN']}>
+              <AppLayout>
+                <ChefDashboard />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
