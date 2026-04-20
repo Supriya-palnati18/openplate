@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { getChefOrders } from '../../services/orderService'
-import { getAllPosts } from '../../services/postService'
+import { getMyProfile } from '../../services/chefService'
 import PostsSection from './sections/PostsSection'
 import OrdersSection from './sections/OrdersSection'
 import styles from './ChefDashboard.module.css'
@@ -18,8 +18,8 @@ function ChefDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [postsRes, ordersRes] = await Promise.all([
-          getAllPosts(),
+        const [profileRes, ordersRes] = await Promise.all([
+          getMyProfile(),
           getChefOrders()
         ])
         const pending = ordersRes.data.orders.filter(
@@ -27,7 +27,7 @@ function ChefDashboard() {
         ).length
 
         setStats({
-          totalPosts: postsRes.data.count,
+          totalPosts: profileRes.data.profile.posts?.length || 0,
           totalOrders: ordersRes.data.count,
           pendingOrders: pending
         })

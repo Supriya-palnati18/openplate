@@ -54,7 +54,7 @@ function RegisterPage() {
         password: formData.password 
       })
       login(data.user)
-      navigate(data.user.role === 'CHEF' ? '/chef/dashboard' : '/feed')
+      navigate(data.user.role === 'CHEF' ? '/chef/profile/setup' : '/feed')
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed.')
     } finally {

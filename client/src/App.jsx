@@ -9,6 +9,7 @@ import ChefDashboard from './pages/chef/ChefDashboard'
 import CustomerFeed from './pages/customer/CustomerFeed'
 import PostDetailPage from './pages/posts/PostDetailPage'
 import MyOrdersPage from './pages/customer/MyOrdersPage'
+import ChefProfileSetup from './pages/chef/ChefProfileSetup'
 
 function App() {
   return (
@@ -55,6 +56,14 @@ function App() {
               <AppLayout>
                 <MyOrdersPage />
               </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chef/profile/setup"
+          element={
+            <ProtectedRoute allowedRoles={['CHEF', 'ADMIN']}>
+              <ChefProfileSetup />
             </ProtectedRoute>
           }
         />
