@@ -471,3 +471,108 @@ Chef starts session (LIVE) → Chef ends session (ENDED + Order COMPLETED)
 - src/components/layout/Navbar.jsx + Navbar.module.css
 - src/pages/auth/LoginPage.jsx + LoginPage.module.css
 - src/pages/auth/RegisterPage.jsx + RegisterPage.module.css
+
+
+---
+
+## Day 10 — 13 April 2026
+
+### What we built
+- Sidebar navigation for desktop
+- Bottom navigation for mobile
+- Profile dropdown in Navbar
+- AppLayout — wrapper combining sidebar + bottom nav
+- Post Detail Page — view dish, ingredients, steps, order
+- My Orders Page — customer order history with cancel
+- Chef Profile Setup — first page after chef registers
+- Fixed dashboard stats to show per-chef data only
+
+### Architecture decisions
+
+#### Layout pattern — PublicLayout vs PrivateLayout
+- Public routes (login, register, home) — no sidebar, no bottom nav
+- Private routes — wrapped in AppLayout which adds sidebar + bottom nav
+- AppLayout uses children prop — doesn't know or care what page is inside it
+
+#### Responsive navigation
+- Desktop (> 768px) — left sidebar, 240px wide, fixed position
+- Mobile (< 768px) — bottom nav, 64px tall, fixed at bottom
+- Same links array, same NavLink pattern — only CSS changes between them
+- padding-bottom: 80px on mobile main content — prevents content hiding behind bottom nav
+- margin-left: 240px on desktop main — pushes content right of fixed sidebar
+
+#### Semantic HTML
+- aside — sidebar (supplementary navigation beside main content)
+- nav — bottom navigation (primary navigation links)
+- main — page content area
+
+#### NavLink vs Link
+- Link — basic navigation, no active state awareness
+- NavLink — gives isActive boolean, used to highlight current page in nav
+
+#### useParams hook
+- Reads dynamic URL segments like :id in /posts/:id
+- Returns string always — must parseInt() before using as number
+- useEffect depends on [id] — refetches if URL id changes
+
+#### Click outside detection pattern
+- useRef points to the dropdown DOM element
+- document.addEventListener('mousedown', handler) on mount
+- cleanup with removeEventListener on unmount
+- checks if click target is inside ref element — if not, close dropdown
+
+#### Profile setup flow
+- Chef registers → redirected to /chef/profile/setup
+- Setup page calls getMyProfile on load
+- If profile exists → redirect to dashboard (replace: true)
+- If no profile → show form
+- After submit → redirect to dashboard
+- replace: true prevents Back button returning to setup page
+
+### Key React concepts learned
+
+#### useParams
+- Hook from react-router-dom
+- const { id } = useParams() reads :id from URL
+- Always returns string — convert to number with parseInt()
+
+#### navigate(-1)
+- Goes back one step in browser history
+- Like pressing browser Back button programmatically
+
+#### useRef
+- Points to actual DOM element
+- Does not cause re-render when value changes
+- Used for click outside detection, focusing inputs, storing timers
+
+#### position: sticky on order card
+- Sticks to bottom of viewport as user scrolls
+- Always visible without blocking content above it
+- bottom: 80px on mobile to stay above bottom nav
+
+#### white-space: pre-wrap
+- Preserves line breaks exactly as typed
+- Used for ingredients and steps text
+
+#### Lookup object for CSS classes
+- const map = { PENDING: styles.pending, ... }
+- map[status] returns correct class
+- Cleaner than multiple if/else or ternary chains
+
+#### Promise.all
+- Runs multiple API calls simultaneously
+- Returns array of results in same order
+- Faster than sequential awaits — parallel not serial
+
+### Bugs fixed
+- navigate not defined in CustomerFeed — missing useNavigate import and hook call
+- Dashboard showing all chefs' posts in stats — fixed to use getMyProfile instead of getAllPosts
+- CSS pasted into wrong files — always check filename tab before pasting
+
+### File structure added
+- components/layout/AppLayout.jsx + css
+- components/layout/Sidebar.jsx + css
+- components/layout/BottomNav.jsx + css
+- pages/posts/PostDetailPage.jsx + css
+- pages/customer/MyOrdersPage.jsx + css
+- pages/chef/ChefProfileSetup.jsx + css
