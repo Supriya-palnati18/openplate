@@ -8,6 +8,7 @@ import RegisterPage from './pages/auth/RegisterPage'
 import ChefDashboard from './pages/chef/ChefDashboard'
 import CustomerFeed from './pages/customer/CustomerFeed'
 import PostDetailPage from './pages/posts/PostDetailPage'
+import MyOrdersPage from './pages/customer/MyOrdersPage'
 
 function App() {
   return (
@@ -43,6 +44,16 @@ function App() {
             <ProtectedRoute allowedRoles={['CHEF', 'ADMIN']}>
               <AppLayout>
                 <ChefDashboard />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-orders"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <MyOrdersPage />
               </AppLayout>
             </ProtectedRoute>
           }
