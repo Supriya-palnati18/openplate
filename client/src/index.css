@@ -1,3 +1,9 @@
+/* ============================================
+   OPENPLATE — GLOBAL STYLES
+   index.css
+   ============================================ */
+
+/* ── Design Tokens ── */
 :root {
   --primary: #8B5E3C;
   --primary-dark: #6B4423;
@@ -23,10 +29,12 @@
   --shadow-sm: 0 1px 3px rgba(139, 94, 60, 0.08);
   --shadow-md: 0 4px 12px rgba(139, 94, 60, 0.12);
   --shadow-lg: 0 8px 24px rgba(139, 94, 60, 0.16);
+  --shadow-xl: 0 16px 48px rgba(139, 94, 60, 0.20);
 
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
+  --radius-xl: 32px;
   --radius-full: 9999px;
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -41,8 +49,16 @@
   --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
 
   --transition: all 0.2s ease;
+  --transition-slow: all 0.4s ease;
+
+  /* Animation durations */
+  --dur-fast: 0.3s;
+  --dur-normal: 0.5s;
+  --dur-slow: 0.8s;
 }
 
 [data-theme='dark'] {
@@ -66,8 +82,10 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
+/* ── Reset ── */
 * {
   margin: 0;
   padding: 0;
@@ -79,7 +97,8 @@ body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   line-height: 1.6;
-  transition: var(--transition);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 a {
@@ -100,4 +119,187 @@ button {
 input, textarea, select {
   font-family: var(--font-sans);
   outline: none;
+}
+
+/* ============================================
+   KEYFRAMES — The motion language of OpenPlate
+   ============================================ */
+
+/* Fade up — elements rise into view from below */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in — simple opacity reveal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Scale in — element grows from slightly smaller */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Pulse — for the live red dot */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+  }
+}
+
+/* Float — gentle up/down for hero image */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Shimmer — for loading skeletons (Phase 2 polish) */
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
+/* ============================================
+   ANIMATION UTILITY CLASSES
+   Use these directly on any element anywhere
+   ============================================ */
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--dur-normal) ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--dur-normal) ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--dur-normal) ease forwards;
+}
+
+.animate-slide-left {
+  animation: slideInLeft var(--dur-slow) ease forwards;
+}
+
+.animate-slide-right {
+  animation: slideInRight var(--dur-slow) ease forwards;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-dot {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Delay helpers — stagger children animations */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+
+/* ============================================
+   SCROLL REVEAL SYSTEM
+   Elements start hidden, reveal on scroll
+   JS in HomePage adds .is-visible to trigger
+   ============================================ */
+
+/* Default hidden state — elements start invisible */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--dur-slow) ease,
+              transform var(--dur-slow) ease;
+}
+
+/* When JS adds this class, element animates in */
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Variants for different reveal directions */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity var(--dur-slow) ease,
+              transform var(--dur-slow) ease;
+}
+
+.reveal-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity var(--dur-slow) ease,
+              transform var(--dur-slow) ease;
+}
+
+.reveal-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ============================================
+   SKELETON LOADER — for loading states
+   ============================================ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--bg-secondary) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% auto;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: var(--radius-md);
 }

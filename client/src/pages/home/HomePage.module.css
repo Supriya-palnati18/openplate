@@ -1,0 +1,750 @@
+/* ============================================
+   OPENPLATE — HomePage.module.css
+   ============================================ */
+
+.page {
+  overflow-x: hidden;
+}
+
+/* ── NAVBAR SPACER ──────────────────────────── */
+/* Prevents content hiding behind fixed navbar */
+.navSpacer {
+  height: 64px;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero {
+  min-height: 92vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--space-16);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-6);
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  width: fit-content;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--border);
+}
+
+.heroTitle {
+  font-size: 3.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.heroTitleAccent {
+  color: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline decoration on accent word */
+.heroTitleAccent::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--primary-light);
+  border-radius: var(--radius-full);
+  opacity: 0.5;
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 460px;
+}
+
+.heroActions {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-top: var(--space-2);
+}
+
+/* ── Buttons ── */
+.heroPrimary {
+  background-color: var(--primary);
+  color: var(--text-inverse);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+}
+
+.heroPrimary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.heroSecondary {
+  background-color: transparent;
+  color: var(--primary);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid var(--primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.heroSecondary:hover {
+  background-color: var(--primary-subtle);
+  transform: translateY(-2px);
+}
+
+/* ── Hero Image ── */
+.heroImage {
+  position: relative;
+  height: 520px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  /* float animation applied via global class in JSX */
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+}
+
+/* Gradient overlay on image bottom */
+.heroImage::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.5),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.heroImageBadge {
+  position: absolute;
+  bottom: var(--space-6);
+  left: var(--space-6);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  z-index: 2;
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+}
+
+.liveDot {
+  width: 10px;
+  height: 10px;
+  background-color: #E53935;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  /* pulse animation applied via global class in JSX */
+}
+
+.heroImageBadgeText {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.heroImageBadgeSubtext {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* ============================================
+   DIFFERENTIATORS BAR
+   Replaces fake stats — shows real product truths
+   ============================================ */
+.diffBar {
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--primary-dark) 100%
+  );
+  padding: var(--space-10) var(--space-6);
+}
+
+.diffBarInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+}
+
+.diffItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.diffItem:last-child {
+  border-right: none;
+}
+
+.diffIcon {
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+}
+
+.diffTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.3;
+}
+
+.diffSubtext {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+/* ============================================
+   HOW IT WORKS
+   ============================================ */
+.howItWorks {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-24) var(--space-6);
+  text-align: center;
+}
+
+.sectionBadge {
+  display: inline-flex;
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--border);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.sectionTitle {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sectionSubtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 480px;
+  margin: 0 auto var(--space-16);
+  line-height: 1.7;
+}
+
+/* Steps with connector line */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-8);
+  position: relative;
+}
+
+/* The connecting line between steps */
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(16.66% + 28px);
+  right: calc(16.66% + 28px);
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--primary-light) 100%
+  );
+  z-index: 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  position: relative;
+  z-index: 1;
+}
+
+.stepNumber {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--primary-dark) 100%
+  );
+  color: var(--text-inverse);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-md);
+  border: 3px solid var(--bg-secondary);
+}
+
+.stepTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stepDesc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  max-width: 220px;
+}
+
+/* ============================================
+   FEATURES GRID
+   ============================================ */
+.features {
+  background-color: var(--bg-card);
+  padding: var(--space-24) var(--space-6);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.featuresInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  margin-top: var(--space-12);
+  text-align: left;
+}
+
+.featureCard {
+  background: linear-gradient(
+    145deg,
+    var(--primary-subtle) 0%,
+    var(--bg-card) 55%
+  );
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  border: 1.5px solid var(--border);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
+}
+
+.featureIconWrap {
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.featureTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.01em;
+}
+
+.featureDesc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ============================================
+   FOR CHEFS SECTION
+   ============================================ */
+.forChefs {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-24) var(--space-6);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+  align-items: center;
+}
+
+.forChefsImageWrap {
+  position: relative;
+  height: 440px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+}
+
+.forChefsImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay badge on chef image */
+.forChefsImageWrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+  pointer-events: none;
+}
+
+.chefBadge {
+  position: absolute;
+  bottom: var(--space-6);
+  left: var(--space-6);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  z-index: 2;
+  border: 1px solid var(--border);
+}
+
+.chefBadgeEmoji {
+  font-size: 1.4rem;
+}
+
+.chefBadgeText {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.chefBadgeSubtext {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.forChefsContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.forChefsTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.forChefsDesc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.perk {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.perk:hover {
+  border-color: var(--border-strong);
+  background-color: var(--primary-subtle);
+}
+
+.perkIcon {
+  width: 34px;
+  height: 34px;
+  background-color: var(--primary-subtle);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+/* ============================================
+   CTA SECTION
+   ============================================ */
+.cta {
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark) 0%,
+    var(--primary) 50%,
+    var(--primary-light) 100%
+  );
+  padding: var(--space-24) var(--space-6);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative circle in background */
+.cta::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+.cta::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 240px;
+  height: 240px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.ctaInner {
+  position: relative;
+  z-index: 1;
+}
+
+.ctaTitle {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.ctaSubtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: var(--space-10);
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.ctaActions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaPrimary {
+  background-color: #FFFFFF;
+  color: var(--primary-dark);
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-lg);
+}
+
+.ctaPrimary:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+}
+
+.ctaSecondary {
+  background-color: transparent;
+  color: #FFFFFF;
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.ctaSecondary:hover {
+  border-color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+}
+
+.footerText {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   RESPONSIVE — MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: var(--space-10) var(--space-4);
+    gap: var(--space-8);
+  }
+
+  .heroTitle {
+    font-size: 2.4rem;
+  }
+
+  .heroImage {
+    height: 300px;
+    order: -1;
+  }
+
+  .diffBarInner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .diffItem {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: var(--space-4);
+  }
+
+  .diffItem:nth-child(3),
+  .diffItem:last-child {
+    border-bottom: none;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .steps::before {
+    display: none;
+  }
+
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .forChefs {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .forChefsImageWrap {
+    height: 280px;
+  }
+
+  .sectionTitle {
+    font-size: 1.8rem;
+  }
+
+  .ctaTitle {
+    font-size: 2rem;
+  }
+
+  .howItWorks,
+  .forChefs {
+    padding: var(--space-16) var(--space-4);
+  }
+}
