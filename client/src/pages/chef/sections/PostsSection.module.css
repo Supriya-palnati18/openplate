@@ -1,14 +1,13 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-2);
 }
 
 .sectionTitle {
@@ -17,89 +16,223 @@
   color: var(--text-primary);
 }
 
-.empty {
-  text-align: center;
-  padding: var(--space-10);
-  color: var(--text-muted);
-  background-color: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-}
-
-.postCard {
-  background-color: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: var(--space-4);
 }
 
-.postInfo {
+/* Post card */
+.postCard {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: var(--transition);
+}
+
+.postCard:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.typeBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.typeVideo {
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+}
+
+.typeLive {
+  background-color: rgba(229, 57, 53, 0.1);
+  color: var(--error);
+}
+
+.statusBadge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.statusPublished {
+  background-color: rgba(76, 175, 80, 0.12);
+  color: var(--success);
+}
+
+.statusDraft {
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+}
+
+.cardBody {
   flex: 1;
 }
 
 .postTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  line-height: 1.4;
+}
+
+.postPrice {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.cardActions {
+  display: flex;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.actionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  background: none;
+}
+
+.actionPublish {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.actionPublish:hover {
+  background-color: rgba(76, 175, 80, 0.08);
+}
+
+.actionUnpublish {
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.actionUnpublish:hover {
+  background-color: var(--bg-secondary);
+}
+
+.actionDelete {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.actionDelete:hover {
+  background-color: rgba(229, 57, 53, 0.06);
+}
+
+.actionBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border);
+}
+
+.emptyIcon {
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.emptyTitle {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: var(--space-1);
 }
 
-.postMeta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
-.postPrice {
+.emptyText {
   font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--primary);
+  color: var(--text-muted);
 }
 
-.badge {
-  font-size: 0.7rem;
-  padding: 2px var(--space-2);
+/* Skeleton */
+.skCard {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skBadgeRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.skBadge {
+  height: 20px;
+  width: 60px;
   border-radius: var(--radius-full);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-.badgePublished {
-  background-color: rgba(76, 175, 80, 0.12);
-  color: var(--success);
+.skTitle {
+  height: 18px;
+  width: 80%;
+  margin-top: var(--space-2);
 }
 
-.badgeDraft {
-  background-color: var(--primary-subtle);
-  color: var(--primary);
+.skPrice {
+  height: 22px;
+  width: 40%;
 }
 
-.badgeLive {
-  background-color: rgba(229, 57, 53, 0.1);
-  color: var(--error);
+.skDivider {
+  height: 1px;
+  background-color: var(--border);
+  margin-top: var(--space-1);
 }
 
-.postActions {
+.skActionRow {
   display: flex;
   gap: var(--space-2);
-  flex-shrink: 0;
 }
 
-@media (max-width: 600px) {
-  .postCard {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .postActions {
-    width: 100%;
-    justify-content: flex-end;
-  }
+.skAction {
+  flex: 1;
+  height: 32px;
+  border-radius: var(--radius-md);
 }

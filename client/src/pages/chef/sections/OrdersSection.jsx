@@ -1,86 +1,102 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getChefOrders, confirmOrder, cancelOrder } from '../../../services/orderService'
 import { startSession, endSession } from '../../../services/sessionService'
+import {
+  IconClipboardList,
+  IconUser,
+  IconVideo,
+  IconRadioactive,
+  IconAlertCircle
+} from '@tabler/icons-react'
 import Button from '../../../components/ui/Button'
 import styles from './OrdersSection.module.css'
+
+const STATUS_LABEL = {
+  PENDING:   'Pending',
+  CONFIRMED: 'Confirmed',
+  COMPLETED: 'Completed',
+  CANCELLED: 'Cancelled'
+}
+
+const STATUS_CLASS = {
+  PENDING:   'statusPending',
+  CONFIRMED: 'statusConfirmed',
+  COMPLETED: 'statusCompleted',
+  CANCELLED: 'statusCancelled'
+}
+
+function SkeletonCard() {
+  return (
+    <div className={styles.skCard}>
+      <div className={styles.skHeader}>
+        <div className={`${styles.skLine} ${styles.skLineLong} skeleton`} />
+        <div className={`${styles.skBadge} skeleton`} />
+      </div>
+      <div className={`${styles.skLine} ${styles.skLineMed} skeleton`} />
+      <div className={styles.skMeta}>
+        <div className={`${styles.skLine} ${styles.skLineShort} skeleton`} />
+        <div className={`${styles.skLine} ${styles.skLineShort} skeleton`} />
+      </div>
+      <div className={styles.skDivider} />
+      <div className={styles.skActions}>
+        <div className={`${styles.skBtn} skeleton`} />
+        <div className={`${styles.skBtn} skeleton`} />
+      </div>
+    </div>
+  )
+}
 
 function OrdersSection() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [actionId, setActionId] = useState(null)
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
+    setLoading(true)
+    setError('')
     try {
       const { data } = await getChefOrders()
       setOrders(data.orders)
     } catch {
-      console.error('Failed to fetch orders')
+      setError('Failed to load orders. Please try again.')
     } finally {
       setLoading(false)
     }
+  }, [])
+
+  useEffect(() => { fetchOrders() }, [fetchOrders])
+
+  const withAction = async (id, fn) => {
+    setActionId(id)
+    try { await fn(); fetchOrders() }
+    catch { /* silent */ }
+    finally { setActionId(null) }
   }
 
-  useEffect(() => { fetchOrders() }, [])
-
-  const handleConfirm = async (orderId) => {
-    setActionId(orderId)
-    try {
-      await confirmOrder(orderId)
-      fetchOrders()
-    } catch {
-      console.error('Failed to confirm order')
-    } finally {
-      setActionId(null)
-    }
+  if (loading) {
+    return (
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Incoming orders</h2>
+        <div className={styles.grid}>
+          {Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      </div>
+    )
   }
 
-  const handleCancel = async (orderId) => {
-    setActionId(orderId)
-    try {
-      await cancelOrder(orderId)
-      fetchOrders()
-    } catch {
-      console.error('Failed to cancel order')
-    } finally {
-      setActionId(null)
-    }
+  if (error) {
+    return (
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Incoming orders</h2>
+        <div className={styles.errorBox}>
+          <IconAlertCircle size={20} stroke={1.5} />
+          <p>{error}</p>
+          <Button variant="secondary" size="small" onClick={fetchOrders}>Retry</Button>
+        </div>
+      </div>
+    )
   }
-
-  const handleStartSession = async (sessionId) => {
-    setActionId(sessionId)
-    try {
-      await startSession(sessionId)
-      fetchOrders()
-    } catch {
-      console.error('Failed to start session')
-    } finally {
-      setActionId(null)
-    }
-  }
-
-  const handleEndSession = async (sessionId) => {
-    setActionId(sessionId)
-    try {
-      await endSession(sessionId)
-      fetchOrders()
-    } catch {
-      console.error('Failed to end session')
-    } finally {
-      setActionId(null)
-    }
-  }
-
-  const getStatusClass = (status) => {
-    const map = {
-      PENDING: styles.statusPending,
-      CONFIRMED: styles.statusConfirmed,
-      COMPLETED: styles.statusCompleted,
-      CANCELLED: styles.statusCancelled
-    }
-    return map[status] || ''
-  }
-
-  if (loading) return <div>Loading orders...</div>
 
   return (
     <div className={styles.section}>
@@ -88,84 +104,92 @@ function OrdersSection() {
 
       {orders.length === 0 ? (
         <div className={styles.empty}>
-          No orders yet. Publish your dishes to start receiving orders.
+          <IconClipboardList size={40} stroke={1} className={styles.emptyIcon} />
+          <p className={styles.emptyTitle}>No orders yet</p>
+          <p className={styles.emptyText}>Publish your dishes to start receiving orders.</p>
         </div>
       ) : (
-        orders.map(order => (
-          <div key={order.id} className={styles.orderCard}>
-            <div className={styles.orderHeader}>
-              <span className={styles.orderTitle}>
-                {order.post?.title}
-              </span>
-              <span className={`${styles.statusBadge} ${getStatusClass(order.status)}`}>
-                {order.status}
-              </span>
-            </div>
+        <div className={styles.grid}>
+          {orders.map(order => (
+            <div key={order.id} className={styles.orderCard}>
+              <div className={styles.cardHeader}>
+                <span className={styles.dishName}>{order.post?.title}</span>
+                <span className={`${styles.statusBadge} ${styles[STATUS_CLASS[order.status]]}`}>
+                  {STATUS_LABEL[order.status] || order.status}
+                </span>
+              </div>
 
-            <div className={styles.orderMeta}>
-              <span className={styles.metaItem}>
-                <span className={styles.metaLabel}>Customer: </span>
-                {order.customer?.name}
-              </span>
-              <span className={styles.metaItem}>
-                <span className={styles.metaLabel}>Amount: </span>
-                ₹{order.amount}
-              </span>
-              <span className={styles.metaItem}>
-                <span className={styles.metaLabel}>Type: </span>
-                {order.post?.isLive ? '🔴 Live' : '🎬 Video'}
-              </span>
-            </div>
+              <div className={styles.typeRow}>
+                {order.post?.isLive
+                  ? <><IconRadioactive size={14} stroke={1.5} className={styles.liveIcon} /> Live cooking</>
+                  : <><IconVideo size={14} stroke={1.5} className={styles.videoIcon} /> Video post</>
+                }
+              </div>
 
-            <div className={styles.orderActions}>
-              {order.status === 'PENDING' && (
-                <>
-                  <Button
-                    variant="primary"
-                    size="small"
-                    disabled={actionId === order.id}
-                    onClick={() => handleConfirm(order.id)}
-                  >
-                    Confirm
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="small"
-                    disabled={actionId === order.id}
-                    onClick={() => handleCancel(order.id)}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              )}
+              <div className={styles.metaRow}>
+                <span className={styles.metaItem}>
+                  <IconUser size={14} stroke={1.5} />
+                  {order.customer?.name}
+                </span>
+                <span className={styles.metaPrice}>₹{order.amount}</span>
+              </div>
 
-              {order.status === 'CONFIRMED' && order.liveSession && (
-                <>
-                  {order.liveSession.status === 'SCHEDULED' && (
+              <div className={styles.cardActions}>
+                {order.status === 'PENDING' && (
+                  <>
                     <Button
                       variant="primary"
                       size="small"
-                      disabled={actionId === order.liveSession.id}
-                      onClick={() => handleStartSession(order.liveSession.id)}
+                      disabled={actionId === order.id}
+                      onClick={() => withAction(order.id, () => confirmOrder(order.id))}
                     >
-                      🔴 Go Live
+                      Confirm
                     </Button>
-                  )}
-                  {order.liveSession.status === 'LIVE' && (
                     <Button
-                      variant="secondary"
+                      variant="ghost"
                       size="small"
-                      disabled={actionId === order.liveSession.id}
-                      onClick={() => handleEndSession(order.liveSession.id)}
+                      disabled={actionId === order.id}
+                      onClick={() => withAction(order.id, () => cancelOrder(order.id))}
                     >
-                      End Session
+                      Cancel
                     </Button>
-                  )}
-                </>
-              )}
+                  </>
+                )}
+
+                {order.status === 'CONFIRMED' && order.liveSession && (
+                  <>
+                    {order.liveSession.status === 'SCHEDULED' && (
+                      <Button
+                        variant="primary"
+                        size="small"
+                        disabled={actionId === order.liveSession.id}
+                        onClick={() => withAction(order.liveSession.id, () => startSession(order.liveSession.id))}
+                      >
+                        🔴 Go Live
+                      </Button>
+                    )}
+                    {order.liveSession.status === 'LIVE' && (
+                      <Button
+                        variant="secondary"
+                        size="small"
+                        disabled={actionId === order.liveSession.id}
+                        onClick={() => withAction(order.liveSession.id, () => endSession(order.liveSession.id))}
+                      >
+                        End Session
+                      </Button>
+                    )}
+                  </>
+                )}
+
+                {(order.status === 'COMPLETED' || order.status === 'CANCELLED') && (
+                  <span className={styles.closedLabel}>
+                    {order.status === 'COMPLETED' ? 'Order completed' : 'Order cancelled'}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   )

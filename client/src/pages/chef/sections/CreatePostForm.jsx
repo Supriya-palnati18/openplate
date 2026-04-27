@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createPost } from '../../../services/postService'
+import { IconVideo, IconRadioactive, IconAlertCircle } from '@tabler/icons-react'
 import Input from '../../../components/ui/Input'
 import Button from '../../../components/ui/Button'
 import styles from './CreatePostForm.module.css'
@@ -20,36 +21,23 @@ function CreatePostForm({ onPostCreated }) {
   const [error, setError] = useState('')
 
   const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
     setError('')
-  }
-
-  const handleTypeSelect = (isLive) => {
-    setFormData(prev => ({ ...prev, isLive }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (!formData.title || !formData.description ||
-        !formData.ingredients || !formData.steps || !formData.price) {
+    if (!formData.title || !formData.description || !formData.ingredients || !formData.steps || !formData.price) {
       setError('Please fill in all required fields')
       return
     }
-
     setLoading(true)
     try {
-      await createPost({
-        ...formData,
-        price: parseFloat(formData.price)
-      })
+      await createPost({ ...formData, price: parseFloat(formData.price) })
       setFormData(initialForm)
       onPostCreated()
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create post')
+      setError(err.response?.data?.message || 'Failed to create dish')
     } finally {
       setLoading(false)
     }
@@ -60,7 +48,12 @@ function CreatePostForm({ onPostCreated }) {
       <h3 className={styles.formTitle}>Add new dish</h3>
 
       <form className={styles.fields} onSubmit={handleSubmit}>
-        {error && <div className={styles.errorBox}>{error}</div>}
+        {error && (
+          <div className={styles.errorBox}>
+            <IconAlertCircle size={16} stroke={1.5} />
+            {error}
+          </div>
+        )}
 
         <div className={styles.row}>
           <Input
@@ -80,46 +73,58 @@ function CreatePostForm({ onPostCreated }) {
           />
         </div>
 
-        <Input
-          label="Description *"
-          name="description"
-          placeholder="What makes this dish special?"
-          value={formData.description}
-          onChange={handleChange}
-        />
+        <div className={styles.field}>
+          <label className={styles.label}>Description *</label>
+          <textarea
+            className={styles.textarea}
+            name="description"
+            placeholder="What makes this dish special?"
+            value={formData.description}
+            onChange={handleChange}
+            rows={3}
+          />
+        </div>
 
-        <Input
-          label="Ingredients *"
-          name="ingredients"
-          placeholder="List all ingredients separated by commas"
-          value={formData.ingredients}
-          onChange={handleChange}
-        />
+        <div className={styles.field}>
+          <label className={styles.label}>Ingredients *</label>
+          <textarea
+            className={styles.textarea}
+            name="ingredients"
+            placeholder="List all ingredients, one per line or comma separated"
+            value={formData.ingredients}
+            onChange={handleChange}
+            rows={3}
+          />
+        </div>
 
-        <Input
-          label="Cooking steps *"
-          name="steps"
-          placeholder="Step 1: ... Step 2: ..."
-          value={formData.steps}
-          onChange={handleChange}
-        />
+        <div className={styles.field}>
+          <label className={styles.label}>Cooking steps *</label>
+          <textarea
+            className={styles.textarea}
+            name="steps"
+            placeholder="Step 1: ...&#10;Step 2: ...&#10;Step 3: ..."
+            value={formData.steps}
+            onChange={handleChange}
+            rows={4}
+          />
+        </div>
 
         <div className={styles.typeSelector}>
           <span className={styles.typeLabel}>Cooking type</span>
           <div className={styles.typeOptions}>
             <div
               className={`${styles.typeCard} ${!formData.isLive ? styles.typeCardActive : ''}`}
-              onClick={() => handleTypeSelect(false)}
+              onClick={() => setFormData(prev => ({ ...prev, isLive: false }))}
             >
-              <span className={styles.typeEmoji}>🎬</span>
+              <IconVideo size={24} stroke={1.5} className={styles.typeIcon} />
               <span className={styles.typeTitle}>Video post</span>
               <span className={styles.typeDesc}>Upload a cooking video</span>
             </div>
             <div
               className={`${styles.typeCard} ${formData.isLive ? styles.typeCardActive : ''}`}
-              onClick={() => handleTypeSelect(true)}
+              onClick={() => setFormData(prev => ({ ...prev, isLive: true }))}
             >
-              <span className={styles.typeEmoji}>🔴</span>
+              <IconRadioactive size={24} stroke={1.5} className={`${styles.typeIcon} ${styles.typeIconLive}`} />
               <span className={styles.typeTitle}>Live cooking</span>
               <span className={styles.typeDesc}>Cook live for the customer</span>
             </div>
@@ -137,18 +142,10 @@ function CreatePostForm({ onPostCreated }) {
         )}
 
         <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => setFormData(initialForm)}
-          >
+          <Button type="button" variant="secondary" onClick={() => setFormData(initialForm)}>
             Clear
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={loading}
-          >
+          <Button type="submit" variant="primary" disabled={loading}>
             {loading ? 'Creating...' : 'Create dish'}
           </Button>
         </div>

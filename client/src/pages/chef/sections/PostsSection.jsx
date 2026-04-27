@@ -1,37 +1,67 @@
-import { useState, useEffect } from 'react'
-import { getChefOrders } from '../../../services/orderService'
+import { useState, useEffect, useCallback } from 'react'
 import { togglePublish, deletePost } from '../../../services/postService'
+import { getMyProfile } from '../../../services/chefService'
+import {
+  IconToolsKitchen2,
+  IconEye,
+  IconEyeOff,
+  IconTrash,
+  IconVideo,
+  IconRadioactive
+} from '@tabler/icons-react'
 import CreatePostForm from './CreatePostForm'
 import Button from '../../../components/ui/Button'
 import Modal from '../../../components/ui/Modal'
 import styles from './PostsSection.module.css'
-import { getMyProfile } from '../../../services/chefService'
+
+function SkeletonCard() {
+  return (
+    <div className={styles.skCard}>
+      <div className={`${styles.skBadgeRow}`}>
+        <div className={`${styles.skBadge} skeleton`} />
+        <div className={`${styles.skBadge} skeleton`} />
+      </div>
+      <div className={`${styles.skTitle} skeleton`} />
+      <div className={`${styles.skPrice} skeleton`} />
+      <div className={styles.skDivider} />
+      <div className={styles.skActionRow}>
+        <div className={`${styles.skAction} skeleton`} />
+        <div className={`${styles.skAction} skeleton`} />
+      </div>
+    </div>
+  )
+}
 
 function PostsSection() {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [deleteModal, setDeleteModal] = useState(null)
+  const [togglingId, setTogglingId] = useState(null)
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
+    setLoading(true)
     try {
       const { data } = await getMyProfile()
       setPosts(data.profile.posts || [])
     } catch {
-      console.error('Failed to fetch posts')
+      // silent
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  useEffect(() => { fetchPosts() }, [])
+  useEffect(() => { fetchPosts() }, [fetchPosts])
 
   const handleTogglePublish = async (postId) => {
+    setTogglingId(postId)
     try {
       await togglePublish(postId)
       fetchPosts()
     } catch {
-      console.error('Failed to toggle publish')
+      // silent
+    } finally {
+      setTogglingId(null)
     }
   }
 
@@ -41,23 +71,16 @@ function PostsSection() {
       setDeleteModal(null)
       fetchPosts()
     } catch {
-      console.error('Failed to delete post')
+      // silent
     }
   }
-
-  const handlePostCreated = () => {
-    setShowForm(false)
-    fetchPosts()
-  }
-
-  if (loading) return <div>Loading...</div>
 
   return (
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>My dishes</h2>
         <Button
-          variant="primary"
+          variant={showForm ? 'secondary' : 'primary'}
           size="small"
           onClick={() => setShowForm(prev => !prev)}
         >
@@ -66,53 +89,67 @@ function PostsSection() {
       </div>
 
       {showForm && (
-        <CreatePostForm onPostCreated={handlePostCreated} />
+        <CreatePostForm onPostCreated={() => { setShowForm(false); fetchPosts() }} />
       )}
 
-      {posts.length === 0 ? (
+      {loading ? (
+        <div className={styles.grid}>
+          {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      ) : posts.length === 0 ? (
         <div className={styles.empty}>
-          No dishes yet. Add your first dish above.
+          <IconToolsKitchen2 size={40} stroke={1} className={styles.emptyIcon} />
+          <p className={styles.emptyTitle}>No dishes yet</p>
+          <p className={styles.emptyText}>Add your first dish using the button above.</p>
         </div>
       ) : (
-        posts.map(post => (
-          <div key={post.id} className={styles.postCard}>
-            <div className={styles.postInfo}>
-              <p className={styles.postTitle}>{post.title}</p>
-              <div className={styles.postMeta}>
-                <span className={styles.postPrice}>₹{post.price}</span>
-                <span className={`${styles.badge} ${post.isPublished ? styles.badgePublished : styles.badgeDraft}`}>
+        <div className={styles.grid}>
+          {posts.map(post => (
+            <div key={post.id} className={styles.postCard}>
+              <div className={styles.cardTop}>
+                <span className={`${styles.typeBadge} ${post.isLive ? styles.typeLive : styles.typeVideo}`}>
+                  {post.isLive
+                    ? <><IconRadioactive size={12} stroke={1.5} /> Live</>
+                    : <><IconVideo size={12} stroke={1.5} /> Video</>
+                  }
+                </span>
+                <span className={`${styles.statusBadge} ${post.isPublished ? styles.statusPublished : styles.statusDraft}`}>
                   {post.isPublished ? 'Published' : 'Draft'}
                 </span>
-                {post.isLive && (
-                  <span className={`${styles.badge} ${styles.badgeLive}`}>
-                    🔴 Live
-                  </span>
-                )}
+              </div>
+
+              <div className={styles.cardBody}>
+                <p className={styles.postTitle}>{post.title}</p>
+                <p className={styles.postPrice}>₹{post.price}</p>
+              </div>
+
+              <div className={styles.cardActions}>
+                <button
+                  className={`${styles.actionBtn} ${post.isPublished ? styles.actionUnpublish : styles.actionPublish}`}
+                  disabled={togglingId === post.id}
+                  onClick={() => handleTogglePublish(post.id)}
+                >
+                  {post.isPublished
+                    ? <><IconEyeOff size={14} stroke={1.5} /> Unpublish</>
+                    : <><IconEye size={14} stroke={1.5} /> Publish</>
+                  }
+                </button>
+                <button
+                  className={`${styles.actionBtn} ${styles.actionDelete}`}
+                  onClick={() => setDeleteModal(post.id)}
+                >
+                  <IconTrash size={14} stroke={1.5} />
+                  Delete
+                </button>
               </div>
             </div>
-            <div className={styles.postActions}>
-              <Button
-                variant="secondary"
-                size="small"
-                onClick={() => handleTogglePublish(post.id)}
-              >
-                {post.isPublished ? 'Unpublish' : 'Publish'}
-              </Button>
-              <Button
-                variant="ghost"
-                size="small"
-                onClick={() => setDeleteModal(post.id)}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
 
       {deleteModal && (
         <Modal
-          icon="⚠️"
+          type="warning"
           title="Delete dish?"
           message="This action cannot be undone. All orders for this dish will also be affected."
           onClose={() => setDeleteModal(null)}
