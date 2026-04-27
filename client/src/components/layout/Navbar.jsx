@@ -3,6 +3,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTheme } from '../../context/ThemeContext'
 import { useAuth } from '../../context/AuthContext'
 import { logout as logoutApi } from '../../services/authService'
+import {
+  IconMoon,
+  IconSun,
+  IconChevronDown,
+  IconChevronUp,
+  IconUser,
+  IconSettings,
+  IconLogout,
+} from '@tabler/icons-react'
 import styles from './Navbar.module.css'
 
 function Navbar() {
@@ -35,21 +44,33 @@ function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
+
+        {/* Logo — desktop uses full Laptop-logo, mobile uses icon logo */}
         <Link to="/" className={styles.logo}>
+          <img
+            src="/Laptop-logo.png"
+            alt="OpenPlate"
+            className={styles.logoDesktop}
+          />
           <img
             src={theme === 'light' ? '/logo-light.png' : '/logo-dark.png'}
             alt="OpenPlate"
-            className={styles.logoImg}
+            className={styles.logoMobile}
           />
         </Link>
 
         <div className={styles.right}>
+
+          {/* Theme toggle */}
           <button
             className={styles.themeToggle}
             onClick={toggleTheme}
             aria-label="Toggle theme"
           >
-            {theme === 'light' ? '🌙' : '☀️'}
+            {theme === 'light'
+              ? <IconMoon size={16} stroke={1.5} />
+              : <IconSun size={16} stroke={1.5} />
+            }
           </button>
 
           {user ? (
@@ -63,7 +84,10 @@ function Navbar() {
                 </div>
                 <span className={styles.profileName}>{user.name}</span>
                 <span className={styles.arrow}>
-                  {dropdownOpen ? '▲' : '▼'}
+                  {dropdownOpen
+                    ? <IconChevronUp size={12} stroke={2} />
+                    : <IconChevronDown size={12} stroke={2} />
+                  }
                 </span>
               </button>
 
@@ -76,48 +100,37 @@ function Navbar() {
                   <div className={styles.dropdownDivider} />
                   <button
                     className={styles.dropdownItem}
-                    onClick={() => {
-                      setDropdownOpen(false)
-                      navigate('/profile')
-                    }}
+                    onClick={() => { setDropdownOpen(false); navigate('/profile') }}
                   >
-                    👤 Profile
+                    <IconUser size={15} stroke={1.5} /> Profile
                   </button>
                   <button
                     className={styles.dropdownItem}
-                    onClick={() => {
-                      setDropdownOpen(false)
-                      navigate('/settings')
-                    }}
+                    onClick={() => { setDropdownOpen(false); navigate('/settings') }}
                   >
-                    ⚙️ Settings
+                    <IconSettings size={15} stroke={1.5} /> Settings
                   </button>
                   <div className={styles.dropdownDivider} />
                   <button
                     className={`${styles.dropdownItem} ${styles.dropdownLogout}`}
                     onClick={handleLogout}
                   >
-                    🚪 Logout
+                    <IconLogout size={15} stroke={1.5} /> Logout
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <div className={styles.authButtons}>
-              <button
-                className={styles.loginBtn}
-                onClick={() => navigate('/login')}
-              >
+              <button className={styles.loginBtn} onClick={() => navigate('/login')}>
                 Login
               </button>
-              <button
-                className={styles.registerBtn}
-                onClick={() => navigate('/register')}
-              >
+              <button className={styles.registerBtn} onClick={() => navigate('/register')}>
                 Register
               </button>
             </div>
           )}
+
         </div>
       </div>
     </nav>

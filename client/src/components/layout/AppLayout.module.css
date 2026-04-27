@@ -1,13 +1,13 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  /* min-height: 100vh; */
 }
 
-.body {
+/* .body {
   display: flex;
   flex: 1;
-}
+} */
 
 .sidebar {
   display: none;
@@ -15,8 +15,9 @@
 
 .main {
   flex: 1;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 70px);
   padding-bottom: var(--space-4);
+  overflow-x: hidden;
 }
 
 @media (min-width: 769px) {

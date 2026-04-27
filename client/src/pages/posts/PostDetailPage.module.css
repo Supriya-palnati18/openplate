@@ -1,50 +1,187 @@
 .page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--space-6);
+  padding: var(--space-6) var(--space-8);
 }
 
+/* ── BACK BUTTON ────────────────────────────── */
 .backBtn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   color: var(--text-muted);
   font-size: 0.875rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
   cursor: pointer;
   background: none;
   border: none;
-  margin-bottom: var(--space-6);
   padding: 0;
-  transition: var(--transition);
+  margin-bottom: var(--space-6);
+  transition: color 0.15s ease;
 }
 
-.backBtn:hover {
-  color: var(--primary);
+.backBtn:hover { color: var(--primary); }
+
+/* ── TWO-COLUMN LAYOUT ──────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+/* ── LEFT COLUMN ────────────────────────────── */
+.left {
+  min-width: 0;
 }
 
 .title {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--space-3);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
+.tagRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.cuisineTag {
+  display: inline-block;
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+  padding: 3px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: rgba(229, 57, 53, 0.1);
+  color: var(--error);
+  padding: 3px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--error);
+  animation: pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* Image */
+.imageWrap {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+  max-height: 380px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Video — only shown when videoUrl exists */
+.videoWrap {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+  aspect-ratio: 16/9;
+  background: #000;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* No media — compact, not intrusive */
+.noMediaPlaceholder {
+  width: 100%;
+  height: 120px;
+  background-color: var(--primary-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--primary-light);
+  margin-bottom: var(--space-6);
+  font-size: 0.85rem;
+}
+
+/* Sections */
+.section {
+  margin-bottom: var(--space-6);
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.01em;
+}
+
+.sectionText {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+/* ── RIGHT COLUMN — sticky ───────────────────── */
+.right {
+  position: sticky;
+  top: calc(70px + var(--space-5));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Chef card */
 .chefCard {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   background-color: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
-  margin-bottom: var(--space-6);
 }
 
 .chefAvatar {
   width: 44px;
   height: 44px;
   background-color: var(--primary);
-  color: var(--text-inverse);
+  color: #fff;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
@@ -54,133 +191,187 @@
   flex-shrink: 0;
 }
 
-.chefInfo {
-  flex: 1;
-}
+.chefInfo { flex: 1; min-width: 0; }
 
 .chefName {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.chefMeta {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.verifiedBadge {
-  font-size: 0.75rem;
-  background-color: rgba(76, 175, 80, 0.1);
-  color: var(--success);
-  padding: 2px var(--space-2);
-  border-radius: var(--radius-full);
-  font-weight: 600;
-}
-
-.videoWrapper {
-  width: 100%;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin-bottom: var(--space-6);
-  background-color: var(--bg-secondary);
-  aspect-ratio: 16/9;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 4px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.verifiedIcon { color: var(--success); flex-shrink: 0; }
+
+.chefMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 3px;
 }
 
-.videoPlaceholder {
-  text-align: center;
+.chefMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
-.videoPlaceholderIcon {
-  font-size: 3rem;
-  display: block;
-  margin-bottom: var(--space-2);
-}
-
-.section {
-  margin-bottom: var(--space-6);
-}
-
-.sectionTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-3);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--border);
-}
-
-.sectionText {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  white-space: pre-wrap;
-}
-
-.orderCard {
-  position: sticky;
-  bottom: var(--space-4);
+/* Order panel */
+.orderPanel {
   background-color: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.priceRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  margin-top: var(--space-8);
-}
-
-.price {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--primary);
 }
 
 .priceLabel {
   font-size: 0.8rem;
   color: var(--text-muted);
-  display: block;
+  font-weight: 500;
 }
 
-.loading {
-  text-align: center;
-  padding: var(--space-16);
-  color: var(--text-muted);
+.price {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.02em;
 }
 
-.errorBox {
-  background-color: rgba(229, 57, 53, 0.08);
-  border: 1px solid var(--error);
+.liveNotice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: rgba(229, 57, 53, 0.07);
+  border: 1px solid rgba(229, 57, 53, 0.2);
   border-radius: var(--radius-md);
-  padding: var(--space-4);
+  padding: var(--space-3);
+  font-size: 0.78rem;
   color: var(--error);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.liveDotSm {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--error);
+  animation: pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.orderBtn {
+  width: 100%;
+  padding: 12px var(--space-5);
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: background-color 0.18s ease, transform 0.15s ease;
+}
+
+.orderBtn:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.orderBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.orderBtnLive { background-color: var(--error); }
+.orderBtnLive:hover:not(:disabled) { background-color: #c62828; }
+
+.btnSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── SKELETON ───────────────────────────────── */
+.skBack     { height: 20px; width: 60px; border-radius: var(--radius-sm); margin-bottom: var(--space-6); }
+.skTitle    { height: 32px; width: 70%; border-radius: var(--radius-sm); margin-bottom: var(--space-5); }
+.skImage    { height: 280px; border-radius: var(--radius-lg); margin-bottom: var(--space-6); }
+.skLine     { height: 14px; border-radius: var(--radius-sm); margin-bottom: var(--space-3); }
+.skLineShort{ height: 14px; width: 60%; border-radius: var(--radius-sm); }
+.skChefCard { height: 80px; border-radius: var(--radius-lg); margin-bottom: var(--space-4); }
+.skOrderPanel { height: 160px; border-radius: var(--radius-lg); }
+
+/* ── ERROR STATE ────────────────────────────── */
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-20) var(--space-4);
   text-align: center;
-  margin: var(--space-8) 0;
+}
+
+.errorIconWrap {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background-color: rgba(229, 57, 53, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--error);
+  margin-bottom: var(--space-4);
+}
+
+.errorTitle { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2); }
+.errorMsg   { font-size: 0.875rem; color: var(--text-muted); margin-bottom: var(--space-5); }
+
+.retryBtn {
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+}
+
+.retryBtn:hover { background-color: var(--primary-dark); }
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .right {
+    position: static;
+    order: -1;
+  }
 }
 
 @media (max-width: 768px) {
-  .page {
-    padding: var(--space-4);
-  }
-
-  .title {
-    font-size: 1.4rem;
-  }
-
-  .orderCard {
-    bottom: 80px;
-  }
+  .page { padding: var(--space-4); }
+  .title { font-size: 1.3rem; }
 }

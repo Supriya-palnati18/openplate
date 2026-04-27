@@ -1,156 +1,280 @@
 .page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-6);
+  padding: var(--space-8);
 }
 
-.header {
-  margin-bottom: var(--space-8);
-}
+/* ── HEADER ─────────────────────────────────── */
+.header { margin-bottom: var(--space-6); }
 
 .title {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  letter-spacing: -0.02em;
+}
+
+.subtitle { font-size: 0.9rem; color: var(--text-secondary); }
+
+/* ── GRID — 4 desktop, 3 laptop, 1 mobile ───── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+/* ── CARD ───────────────────────────────────── */
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ── CARD TOP ───────────────────────────────── */
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* ── STATUS BADGE ───────────────────────────── */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.statusPENDING   { background: rgba(251,140,0,0.12);  color: var(--warning); }
+.statusCONFIRMED { background: rgba(76,175,80,0.12);  color: var(--success); }
+.statusCOMPLETED { background: var(--primary-subtle); color: var(--primary); }
+.statusCANCELLED { background: var(--bg-secondary);   color: var(--text-muted); }
+
+/* ── CARD TITLE ─────────────────────────────── */
+.cardTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+/* ── CUISINE TAG ────────────────────────────── */
+.cuisineTag {
+  display: inline-block;
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+/* ── LIVE SESSION ───────────────────────────── */
+.sessionRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  padding: 3px var(--space-2);
+  width: fit-content;
+}
+
+.sessionLive {
+  background: rgba(229, 57, 53, 0.08);
+  color: var(--error);
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--error);
+  animation: pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* ── META ROW ───────────────────────────────── */
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: var(--border);
+  flex-shrink: 0;
+}
+
+/* ── ACTIONS ────────────────────────────────── */
+.cardActions {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+}
+
+.cancelBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--error);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background-color: rgba(229, 57, 53, 0.06);
+  border-color: var(--error);
+}
+
+.cancelBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btnSpinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(229,57,53,0.3);
+  border-top-color: var(--error);
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── SKELETON ───────────────────────────────── */
+.skCard {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skBadge { height: 20px; width: 70px; border-radius: var(--radius-full); }
+.skTitle { height: 18px; width: 85%; border-radius: var(--radius-sm); }
+.skTag   { height: 18px; width: 50%; border-radius: var(--radius-full); }
+.skMeta  { height: 14px; width: 100%; border-radius: var(--radius-sm); }
+
+/* ── CENTER STATES ──────────────────────────── */
+.centerState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-20) var(--space-4);
+}
+
+.emptyIconWrap {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-light);
+  margin-bottom: var(--space-5);
+}
+
+.errorIconWrap {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background-color: rgba(229, 57, 53, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--error);
+  margin-bottom: var(--space-5);
+}
+
+.stateTitle {
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--space-2);
 }
 
-.subtitle {
-  font-size: 1rem;
-  color: var(--text-muted);
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.card {
-  background-color: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-}
-
-.cardHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-3);
-}
-
-.cardTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.statusBadge {
-  font-size: 0.75rem;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-full);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.statusPending {
-  background-color: rgba(251, 140, 0, 0.12);
-  color: var(--warning);
-}
-
-.statusConfirmed {
-  background-color: rgba(76, 175, 80, 0.12);
-  color: var(--success);
-}
-
-.statusCompleted {
-  background-color: var(--primary-subtle);
-  color: var(--primary);
-}
-
-.statusCancelled {
-  background-color: rgba(229, 57, 53, 0.08);
-  color: var(--error);
-}
-
-.cardMeta {
-  display: flex;
-  gap: var(--space-4);
-  margin-bottom: var(--space-4);
-  flex-wrap: wrap;
-}
-
-.metaItem {
+.stateMsg {
   font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.metaLabel {
-  font-weight: 500;
   color: var(--text-muted);
+  margin-bottom: var(--space-5);
+  max-width: 280px;
+  line-height: 1.6;
 }
 
-.sessionBadge {
+.actionBtn {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  font-size: 0.8rem;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-full);
-  background-color: rgba(229, 57, 53, 0.1);
-  color: var(--error);
-  font-weight: 500;
-  margin-bottom: var(--space-3);
-}
-
-.cardActions {
-  display: flex;
   gap: var(--space-2);
-  justify-content: flex-end;
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background-color 0.18s ease;
 }
 
-.empty {
-  text-align: center;
-  padding: var(--space-16);
-  color: var(--text-muted);
-  background-color: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-}
+.actionBtn:hover { background-color: var(--primary-dark); }
 
-.emptyIcon {
-  font-size: 3rem;
-  margin-bottom: var(--space-4);
-}
-
-.emptyText {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: var(--space-2);
-}
-
-.loading {
-  text-align: center;
-  padding: var(--space-16);
-  color: var(--text-muted);
+/* ── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .page {
-    padding: var(--space-4);
-  }
-
-  .title {
-    font-size: 1.4rem;
-  }
-
-  .cardHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
+  .page { padding: var(--space-5) var(--space-4); }
+  .title { font-size: 1.3rem; }
+  .grid { grid-template-columns: 1fr; }
 }
