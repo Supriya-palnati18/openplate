@@ -1,9 +1,5 @@
 .form {
-  background-color: var(--bg-card);
-  border-radius: var(--radius-lg);
   padding: var(--space-6);
-  border: 1px solid var(--border);
-  margin-bottom: var(--space-2);
 }
 
 .formTitle {
@@ -25,7 +21,6 @@
   gap: var(--space-4);
 }
 
-/* Textarea field */
 .field {
   display: flex;
   flex-direction: column;
@@ -60,11 +55,8 @@
   box-shadow: 0 0 0 3px var(--primary-subtle);
 }
 
-.textarea::placeholder {
-  color: var(--text-muted);
-}
+.textarea::placeholder { color: var(--text-muted); }
 
-/* Type selector */
 .typeSelector {
   display: flex;
   flex-direction: column;
@@ -97,36 +89,14 @@
   gap: var(--space-1);
 }
 
-.typeCard:hover {
-  border-color: var(--primary-light);
-}
+.typeCard:hover { border-color: var(--primary-light); }
+.typeCardActive { border-color: var(--primary); background-color: var(--primary-subtle); }
 
-.typeCardActive {
-  border-color: var(--primary);
-  background-color: var(--primary-subtle);
-}
+.typeIcon { color: var(--primary); margin-bottom: var(--space-1); }
+.typeIconLive { color: var(--error); }
+.typeTitle { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+.typeDesc { font-size: 0.75rem; color: var(--text-muted); }
 
-.typeIcon {
-  color: var(--primary);
-  margin-bottom: var(--space-1);
-}
-
-.typeIconLive {
-  color: var(--error);
-}
-
-.typeTitle {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.typeDesc {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-/* Actions */
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -134,7 +104,6 @@
   margin-top: var(--space-2);
 }
 
-/* Error */
 .errorBox {
   display: flex;
   align-items: center;
@@ -148,11 +117,6 @@
 }
 
 @media (max-width: 600px) {
-  .row {
-    grid-template-columns: 1fr;
-  }
-
-  .typeOptions {
-    grid-template-columns: 1fr;
-  }
+  .row { grid-template-columns: 1fr; }
+  .typeOptions { grid-template-columns: 1fr; }
 }

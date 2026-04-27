@@ -8,8 +8,6 @@ import {
   IconSun,
   IconChevronDown,
   IconChevronUp,
-  IconUser,
-  IconSettings,
   IconLogout,
 } from '@tabler/icons-react'
 import styles from './Navbar.module.css'
@@ -36,8 +34,9 @@ function Navbar() {
       await logoutApi()
       logout()
       navigate('/')
-    } catch (error) {
-      console.error('Logout error:', error)
+    } catch {
+      logout()
+      navigate('/')
     }
   }
 
@@ -45,7 +44,6 @@ function Navbar() {
     <nav className={styles.navbar}>
       <div className={styles.container}>
 
-        {/* Logo — desktop uses full Laptop-logo, mobile uses icon logo */}
         <Link to="/" className={styles.logo}>
           <img
             src="/Laptop-logo.png"
@@ -60,8 +58,6 @@ function Navbar() {
         </Link>
 
         <div className={styles.right}>
-
-          {/* Theme toggle */}
           <button
             className={styles.themeToggle}
             onClick={toggleTheme}
@@ -99,19 +95,6 @@ function Navbar() {
                   </div>
                   <div className={styles.dropdownDivider} />
                   <button
-                    className={styles.dropdownItem}
-                    onClick={() => { setDropdownOpen(false); navigate('/profile') }}
-                  >
-                    <IconUser size={15} stroke={1.5} /> Profile
-                  </button>
-                  <button
-                    className={styles.dropdownItem}
-                    onClick={() => { setDropdownOpen(false); navigate('/settings') }}
-                  >
-                    <IconSettings size={15} stroke={1.5} /> Settings
-                  </button>
-                  <div className={styles.dropdownDivider} />
-                  <button
                     className={`${styles.dropdownItem} ${styles.dropdownLogout}`}
                     onClick={handleLogout}
                   >
@@ -130,7 +113,6 @@ function Navbar() {
               </button>
             </div>
           )}
-
         </div>
       </div>
     </nav>

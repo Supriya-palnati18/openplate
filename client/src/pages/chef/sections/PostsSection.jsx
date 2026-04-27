@@ -7,7 +7,8 @@ import {
   IconEyeOff,
   IconTrash,
   IconVideo,
-  IconRadioactive
+  IconRadioactive,
+  IconX
 } from '@tabler/icons-react'
 import CreatePostForm from './CreatePostForm'
 import Button from '../../../components/ui/Button'
@@ -17,7 +18,7 @@ import styles from './PostsSection.module.css'
 function SkeletonCard() {
   return (
     <div className={styles.skCard}>
-      <div className={`${styles.skBadgeRow}`}>
+      <div className={styles.skBadgeRow}>
         <div className={`${styles.skBadge} skeleton`} />
         <div className={`${styles.skBadge} skeleton`} />
       </div>
@@ -79,18 +80,10 @@ function PostsSection() {
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>My dishes</h2>
-        <Button
-          variant={showForm ? 'secondary' : 'primary'}
-          size="small"
-          onClick={() => setShowForm(prev => !prev)}
-        >
-          {showForm ? 'Cancel' : '+ Add dish'}
+        <Button variant="primary" size="small" onClick={() => setShowForm(true)}>
+          + Add dish
         </Button>
       </div>
-
-      {showForm && (
-        <CreatePostForm onPostCreated={() => { setShowForm(false); fetchPosts() }} />
-      )}
 
       {loading ? (
         <div className={styles.grid}>
@@ -100,7 +93,7 @@ function PostsSection() {
         <div className={styles.empty}>
           <IconToolsKitchen2 size={40} stroke={1} className={styles.emptyIcon} />
           <p className={styles.emptyTitle}>No dishes yet</p>
-          <p className={styles.emptyText}>Add your first dish using the button above.</p>
+          <p className={styles.emptyText}>Click "Add dish" to create your first dish.</p>
         </div>
       ) : (
         <div className={styles.grid}>
@@ -138,8 +131,7 @@ function PostsSection() {
                   className={`${styles.actionBtn} ${styles.actionDelete}`}
                   onClick={() => setDeleteModal(post.id)}
                 >
-                  <IconTrash size={14} stroke={1.5} />
-                  Delete
+                  <IconTrash size={14} stroke={1.5} /> Delete
                 </button>
               </div>
             </div>
@@ -147,6 +139,27 @@ function PostsSection() {
         </div>
       )}
 
+      {/* Add dish modal */}
+      {showForm && (
+        <div className={styles.modalOverlay} onClick={() => setShowForm(false)}>
+          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>Add new dish</h3>
+              <button className={styles.modalClose} onClick={() => setShowForm(false)}>
+                <IconX size={20} stroke={1.5} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <CreatePostForm
+                showTitle={false}
+                onPostCreated={() => { setShowForm(false); fetchPosts() }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirmation */}
       {deleteModal && (
         <Modal
           type="warning"

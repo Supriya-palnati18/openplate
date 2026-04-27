@@ -15,7 +15,7 @@
 
 .main {
   flex: 1;
-  min-height: calc(100vh - 70px);
+  /* min-height: calc(100vh - 70px); */
   padding-bottom: var(--space-4);
   overflow-x: hidden;
 }

@@ -6,6 +6,7 @@ import HomePage from './pages/home/HomePage'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import ChefDashboard from './pages/chef/ChefDashboard'
+import ChefOrdersPage from './pages/chef/ChefOrdersPage'
 import CustomerFeed from './pages/customer/CustomerFeed'
 import PostDetailPage from './pages/posts/PostDetailPage'
 import MyOrdersPage from './pages/customer/MyOrdersPage'
@@ -23,9 +24,7 @@ function App() {
           path="/feed"
           element={
             <ProtectedRoute>
-              <AppLayout>
-                <CustomerFeed />
-              </AppLayout>
+              <AppLayout><CustomerFeed /></AppLayout>
             </ProtectedRoute>
           }
         />
@@ -33,9 +32,7 @@ function App() {
           path="/posts/:id"
           element={
             <ProtectedRoute>
-              <AppLayout>
-                <PostDetailPage />
-              </AppLayout>
+              <AppLayout><PostDetailPage /></AppLayout>
             </ProtectedRoute>
           }
         />
@@ -43,9 +40,15 @@ function App() {
           path="/chef/dashboard"
           element={
             <ProtectedRoute allowedRoles={['CHEF', 'ADMIN']}>
-              <AppLayout>
-                <ChefDashboard />
-              </AppLayout>
+              <AppLayout><ChefDashboard /></AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chef/orders"
+          element={
+            <ProtectedRoute allowedRoles={['CHEF', 'ADMIN']}>
+              <AppLayout><ChefOrdersPage /></AppLayout>
             </ProtectedRoute>
           }
         />
@@ -53,9 +56,7 @@ function App() {
           path="/my-orders"
           element={
             <ProtectedRoute>
-              <AppLayout>
-                <MyOrdersPage />
-              </AppLayout>
+              <AppLayout><MyOrdersPage /></AppLayout>
             </ProtectedRoute>
           }
         />

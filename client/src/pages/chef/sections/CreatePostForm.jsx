@@ -6,16 +6,11 @@ import Button from '../../../components/ui/Button'
 import styles from './CreatePostForm.module.css'
 
 const initialForm = {
-  title: '',
-  description: '',
-  ingredients: '',
-  steps: '',
-  price: '',
-  videoUrl: '',
-  isLive: false
+  title: '', description: '', ingredients: '',
+  steps: '', price: '', videoUrl: '', isLive: false
 }
 
-function CreatePostForm({ onPostCreated }) {
+function CreatePostForm({ onPostCreated, showTitle = true }) {
   const [formData, setFormData] = useState(initialForm)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -45,7 +40,7 @@ function CreatePostForm({ onPostCreated }) {
 
   return (
     <div className={styles.form}>
-      <h3 className={styles.formTitle}>Add new dish</h3>
+      {showTitle && <h3 className={styles.formTitle}>Add new dish</h3>}
 
       <form className={styles.fields} onSubmit={handleSubmit}>
         {error && (
@@ -56,57 +51,23 @@ function CreatePostForm({ onPostCreated }) {
         )}
 
         <div className={styles.row}>
-          <Input
-            label="Dish name *"
-            name="title"
-            placeholder="e.g. Hyderabadi Biryani"
-            value={formData.title}
-            onChange={handleChange}
-          />
-          <Input
-            label="Price (₹) *"
-            name="price"
-            type="number"
-            placeholder="e.g. 299"
-            value={formData.price}
-            onChange={handleChange}
-          />
+          <Input label="Dish name *" name="title" placeholder="e.g. Hyderabadi Biryani" value={formData.title} onChange={handleChange} />
+          <Input label="Price (₹) *" name="price" type="number" placeholder="e.g. 299" value={formData.price} onChange={handleChange} />
         </div>
 
         <div className={styles.field}>
           <label className={styles.label}>Description *</label>
-          <textarea
-            className={styles.textarea}
-            name="description"
-            placeholder="What makes this dish special?"
-            value={formData.description}
-            onChange={handleChange}
-            rows={3}
-          />
+          <textarea className={styles.textarea} name="description" placeholder="What makes this dish special?" value={formData.description} onChange={handleChange} rows={3} />
         </div>
 
         <div className={styles.field}>
           <label className={styles.label}>Ingredients *</label>
-          <textarea
-            className={styles.textarea}
-            name="ingredients"
-            placeholder="List all ingredients, one per line or comma separated"
-            value={formData.ingredients}
-            onChange={handleChange}
-            rows={3}
-          />
+          <textarea className={styles.textarea} name="ingredients" placeholder="List all ingredients, one per line or comma separated" value={formData.ingredients} onChange={handleChange} rows={3} />
         </div>
 
         <div className={styles.field}>
           <label className={styles.label}>Cooking steps *</label>
-          <textarea
-            className={styles.textarea}
-            name="steps"
-            placeholder="Step 1: ...&#10;Step 2: ...&#10;Step 3: ..."
-            value={formData.steps}
-            onChange={handleChange}
-            rows={4}
-          />
+          <textarea className={styles.textarea} name="steps" placeholder={"Step 1: ...\nStep 2: ...\nStep 3: ..."} value={formData.steps} onChange={handleChange} rows={4} />
         </div>
 
         <div className={styles.typeSelector}>
@@ -132,19 +93,11 @@ function CreatePostForm({ onPostCreated }) {
         </div>
 
         {!formData.isLive && (
-          <Input
-            label="Video URL"
-            name="videoUrl"
-            placeholder="Paste your cooking video URL"
-            value={formData.videoUrl}
-            onChange={handleChange}
-          />
+          <Input label="Video URL" name="videoUrl" placeholder="Paste your cooking video URL" value={formData.videoUrl} onChange={handleChange} />
         )}
 
         <div className={styles.actions}>
-          <Button type="button" variant="secondary" onClick={() => setFormData(initialForm)}>
-            Clear
-          </Button>
+          <Button type="button" variant="secondary" onClick={() => setFormData(initialForm)}>Clear</Button>
           <Button type="submit" variant="primary" disabled={loading}>
             {loading ? 'Creating...' : 'Create dish'}
           </Button>

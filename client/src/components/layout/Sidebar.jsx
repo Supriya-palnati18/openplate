@@ -4,27 +4,28 @@ import {
   IconLayoutGrid,
   IconShoppingBag,
   IconChefHat,
-  IconClipboardList,
+  IconClipboardList
 } from '@tabler/icons-react'
 import styles from './Sidebar.module.css'
 
-const customerLinks = [
-  { to: '/feed',      icon: IconLayoutGrid,   label: 'Feed' },
-  { to: '/my-orders', icon: IconShoppingBag,  label: 'My Orders' },
-]
-
-const chefLinks = [
-  { to: '/chef/dashboard', icon: IconChefHat,       label: 'My Menu' },
-  { to: '/chef/orders',    icon: IconClipboardList,  label: 'Orders' },
-]
-
 function Sidebar() {
   const { user } = useAuth()
+
+  const customerLinks = [
+    { to: '/feed',      Icon: IconLayoutGrid,   label: 'Feed' },
+    { to: '/my-orders', Icon: IconShoppingBag,  label: 'My Orders' },
+  ]
+
+  const chefLinks = [
+    { to: '/chef/dashboard', Icon: IconChefHat,       label: 'My Menu' },
+    { to: '/chef/orders',    Icon: IconClipboardList,  label: 'Orders' },
+  ]
+
   const links = user?.role === 'CHEF' ? chefLinks : customerLinks
 
   return (
     <aside className={styles.sidebar}>
-      {links.map(({ to, icon: Icon, label }) => (
+      {links.map(({ to, Icon, label }) => (
         <NavLink
           key={to}
           to={to}
@@ -32,7 +33,7 @@ function Sidebar() {
             `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
           }
         >
-          <Icon size={20} stroke={1.5} className={styles.navIcon} />
+          <Icon size={20} stroke={1.5} />
           <span className={styles.navLabel}>{label}</span>
         </NavLink>
       ))}

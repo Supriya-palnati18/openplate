@@ -5,7 +5,7 @@
 }
 
 .header {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
 }
 
 .title {
@@ -28,8 +28,7 @@
 }
 
 .stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: var(--space-4);
   margin-bottom: var(--space-8);
 }
@@ -43,6 +42,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  min-width: 180px;
 }
 
 .statIcon {
@@ -75,39 +75,6 @@
   margin-top: var(--space-1);
 }
 
-.tabs {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-6);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: var(--space-2);
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-5);
-  border-radius: var(--radius-full);
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.tab:hover {
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
-}
-
-.tabActive {
-  background-color: var(--primary-subtle);
-  color: var(--primary);
-}
-
 @media (max-width: 768px) {
   .page {
     padding: var(--space-4);
@@ -117,21 +84,13 @@
     font-size: 1.4rem;
   }
 
-  .stats {
-    grid-template-columns: 1fr;
-    gap: var(--space-3);
-  }
-
   .statCard {
+    flex: 1;
+    min-width: 0;
     padding: var(--space-4);
   }
 
-  .statIcon {
-    width: 40px;
-    height: 40px;
-  }
-
   .statValue {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 }
