@@ -64,7 +64,7 @@ function App() {
           path="/chef/profile/setup"
           element={
             <ProtectedRoute allowedRoles={['CHEF', 'ADMIN']}>
-              <ChefProfileSetup />
+              <AppLayout><ChefProfileSetup /></AppLayout>
             </ProtectedRoute>
           }
         />

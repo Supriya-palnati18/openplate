@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { getMyProfile, updateProfile } from '../../services/chefService'
+import { getMyProfile, createProfile, updateProfile } from '../../services/chefService'
 import {
   IconChefHat,
   IconMapPin,
@@ -17,6 +18,7 @@ import styles from './ChefProfileSetup.module.css'
 
 function ChefProfileSetup() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const isChef = user?.role === 'CHEF'
 
   const [profile, setProfile] = useState(null)
@@ -26,6 +28,7 @@ function ChefProfileSetup() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({ bio: '', location: '', cuisineType: '' })
+  const [isNewProfile, setIsNewProfile] = useState(false)
 
   useEffect(() => {
     if (!isChef) return
@@ -39,7 +42,8 @@ function ChefProfileSetup() {
           cuisineType: data.profile.cuisineType || ''
         })
       } catch {
-        setError('Failed to load profile')
+        setIsNewProfile(true)
+        setEditing(true)
       } finally {
         setLoading(false)
       }
@@ -51,13 +55,16 @@ function ChefProfileSetup() {
     setSaving(true)
     setError('')
     try {
-      const { data } = await updateProfile(formData)
+      const { data } = isNewProfile
+        ? await createProfile(formData)
+        : await updateProfile(formData)
       setProfile(data.profile)
+      setIsNewProfile(false)
       setEditing(false)
-      setSuccess('Profile updated successfully')
+      setSuccess(isNewProfile ? 'Profile created!' : 'Profile updated successfully')
       setTimeout(() => setSuccess(''), 3000)
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update profile')
+      setError(err.response?.data?.message || 'Failed to save profile')
     } finally {
       setSaving(false)
     }
@@ -121,10 +128,12 @@ function ChefProfileSetup() {
       )}
 
       {/* Chef profile card */}
-      {isChef && profile && (
+      {isChef && (profile || isNewProfile) && (
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>Chef Profile</h2>
+            <h2 className={styles.cardTitle}>
+              {isNewProfile ? 'Complete Your Profile' : 'Chef Profile'}
+            </h2>
             {!editing ? (
               <button className={styles.editBtn} onClick={() => setEditing(true)}>
                 <IconPencil size={15} stroke={1.5} /> Edit
@@ -190,6 +199,15 @@ function ChefProfileSetup() {
               <p className={styles.fieldValue}>{profile.cuisineType || '—'}</p>
             )}
           </div>
+
+          {isNewProfile && (
+            <button
+              className={styles.skipBtn}
+              onClick={() => navigate('/chef/dashboard')}
+            >
+              Skip for now — I'll complete this later
+            </button>
+          )}
         </div>
       )}
 
