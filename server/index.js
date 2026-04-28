@@ -7,6 +7,7 @@ const chefRoutes = require('./routes/chef')
 const postRoutes = require('./routes/post')
 const orderRoutes = require('./routes/order')
 const sessionRoutes = require('./routes/session')
+const customerRoutes = require('./routes/customer')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -19,6 +20,7 @@ app.use('/api/chef', chefRoutes)
 app.use('/api/posts', postRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/sessions', sessionRoutes)
+app.use('/api/customer', customerRoutes)
 
 
 app.get('/health', async (req, res) => {

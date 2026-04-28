@@ -11,6 +11,7 @@ import CustomerFeed from './pages/customer/CustomerFeed'
 import PostDetailPage from './pages/posts/PostDetailPage'
 import MyOrdersPage from './pages/customer/MyOrdersPage'
 import ChefProfileSetup from './pages/chef/ChefProfileSetup'
+import CustomerProfilePage from './pages/customer/CustomerProfilePage'
 
 function App() {
   return (
@@ -65,6 +66,16 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['CHEF', 'ADMIN']}>
               <AppLayout><ChefProfileSetup /></AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <CustomerProfilePage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />

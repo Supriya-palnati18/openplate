@@ -576,3 +576,188 @@ Chef starts session (LIVE) → Chef ends session (ENDED + Order COMPLETED)
 - pages/posts/PostDetailPage.jsx + css
 - pages/customer/MyOrdersPage.jsx + css
 - pages/chef/ChefProfileSetup.jsx + css
+
+
+---
+
+## Day 11 — 22 April 2026
+
+### What we built
+- Refined Home page UI — hero section, feature highlights, cleaner layout
+- Redesigned Register page — improved form layout and visual hierarchy
+- Consistent visual language across public pages
+
+### Decisions made
+- Public-facing pages (Home, Login, Register) should feel polished — first impression matters
+- Register page uses role selector clearly — CUSTOMER vs CHEF choice is a product moment, not just a form field
+
+---
+
+## Day 12 — 25 April 2026
+
+### What we built
+- Shared AuthLayout component — wraps Login and Register pages
+- Eliminates duplicated card/centering CSS between auth pages
+- Single source of truth for the auth page shell
+
+### Key concept — shared layout component
+- Instead of copying the same card styles into LoginPage.module.css and RegisterPage.module.css, a single AuthLayout handles centering, card, background
+- Each page only owns its form content — not its container
+- Same principle as AppLayout for protected pages — separate layout concerns from content concerns
+
+### Decisions made
+- AuthLayout vs CSS copy-paste — layout is a structural concern, not a page concern
+- One change to AuthLayout updates both Login and Register consistently
+
+---
+
+## Day 13 — 26 April 2026
+
+### What we built
+- Chef Dashboard redesigned — removed tabs, made Orders a separate sidebar page
+- ChefOrdersPage — dedicated orders page with full order management
+- Chef Profile Setup overhauled — now handles create, view, and edit in one page
+- Add Dish flow changed from inline expand to modal overlay
+- Navbar logo bug fixed — dual logo strategy for desktop vs mobile
+- Sidebar and BottomNav updated — two separate chef links (My Menu, Orders)
+
+### Chef navigation architecture change
+Previously My Menu and Orders were tabs inside one dashboard page.
+Now:
+- /chef/dashboard → My Menu page only (posts management)
+- /chef/orders → Dedicated Orders page with stat cards
+- Two links in Sidebar and BottomNav
+- Cleaner separation — each page has one responsibility
+
+### ChefOrdersPage — what it shows
+- Three stat cards: Total Orders, Pending (orange), Delivered/Completed (green)
+- Orders grid — one card per order
+- Order card: dish name, status badge, type (live/video), customer name, price
+- Actions based on status:
+  - PENDING → Confirm / Cancel buttons
+  - CONFIRMED → Go Live / End session buttons
+  - COMPLETED / CANCELLED → read-only label
+- Skeleton loading, empty state, error state with retry
+
+### Chef Profile Setup — overhaul
+Old behaviour — only showed create form, redirected away if profile existed.
+New behaviour:
+- On load: tries to fetch existing profile
+  - If found → shows profile in view mode with Edit button
+  - If not found → shows create form directly (isNewProfile = true)
+- Edit mode: same form fields, saves via create or update based on isNewProfile flag
+- Skip for now button — only shown when isNewProfile is true
+  - Lets new chef bypass profile setup and go to dashboard
+  - Can always come back and fill it later
+- Wrapped inside AppLayout — sidebar visible on this page
+- Navbar Profile link routes CHEF to /chef/profile/setup
+
+### Add Dish modal pattern
+- Previously form expanded inline below the Add Dish button
+- Now opens as full overlay modal
+- Modal has sticky header with title and × close button
+- Clicking outside modal backdrop closes it
+- CreatePostForm rendered inside modal with showTitle={false} prop
+- Cleaner UX — form doesn't disrupt the dish list layout
+
+### Navbar logo bug — root cause and fix
+The logo appeared huge because CSS classes .logoDesktop and .logoMobile were removed in an earlier refactor but the JSX still referenced them.
+Fix:
+- .logoDesktop → height: 46px, display: block (visible on desktop)
+- .logoMobile → display: none on desktop, display: block on mobile
+- Mobile shows theme-aware icon, desktop shows full Laptop-logo.png
+- Media query at 768px swaps visibility
+
+### Key concept — isNewProfile flag
+A single flag controls which API to call on save:
+- isNewProfile = true → POST /api/chef/profile (create)
+- isNewProfile = false → PUT /api/chef/profile (update)
+This avoids two separate pages or components for the same form.
+Same pattern will be reused on the customer profile page.
+
+### Files created
+- pages/chef/ChefOrdersPage.jsx + css
+- Tabler icons used: IconShoppingBag, IconClock, IconCircleCheck, IconChefHat, IconClipboardList
+
+### Files modified
+- pages/chef/ChefDashboard.jsx — removed tabs, orders section moved out
+- pages/chef/ChefProfileSetup.jsx — full overhaul with view/edit/create + skip
+- pages/chef/sections/PostsSection.jsx — add dish as modal
+- pages/chef/sections/PostsSection.module.css — modal overlay styles
+- components/layout/Sidebar.jsx — two chef links
+- components/layout/BottomNav.jsx — two chef links
+- components/layout/Navbar.jsx — logo fix, role-aware profile link
+- components/layout/Navbar.module.css — .logoDesktop and .logoMobile classes
+- App.jsx — /chef/orders route added, ChefProfileSetup wrapped in AppLayout
+
+---
+
+## Day 14 — 27 April 2026
+
+### What we built
+- Customer Profile — full backend and frontend
+- CustomerProfile database model with delivery address fields
+- Three API endpoints for customer profile management
+- CustomerProfilePage — view and edit delivery details with sidebar
+
+### Why customer profile
+Customers need to store a delivery address before ordering food.
+Fields needed: phone, street, landmark (optional), city, state, country, pincode.
+These are captured once and reused for every order.
+Name and email already exist on the User model — no duplication needed.
+
+### Database change — CustomerProfile model
+New table added to schema.prisma:
+- userId — unique foreign key to User (1:1 relationship)
+- phone — required
+- landmark — optional (String?)
+- street, city, state, country, pincode — all required
+- createdAt, updatedAt — automatic timestamps
+- Relation added on User model: customerProfile CustomerProfile?
+
+Migration command: npx prisma migrate dev --name add_customer_profile
+
+### API endpoints — /api/customer
+- POST /api/customer/profile — create profile (first time)
+- GET /api/customer/profile — fetch own profile
+- PUT /api/customer/profile — update profile
+
+All three routes protected with JWT middleware.
+Controller uses conditional spread for partial updates — same pattern as chef profile.
+GET returns 404 if no profile exists — frontend uses this to detect new vs existing user.
+
+### CustomerProfilePage — design decisions
+- Page lives inside AppLayout — sidebar is visible (consistent with rest of app)
+- Two sections on the page:
+  - Account Info card — Name, Email, Role (read-only, from AuthContext)
+  - Delivery Details card — editable fields
+- Same isNewProfile pattern as Chef Profile Setup:
+  - 404 from API → isNewProfile = true → show form in create mode
+  - Profile found → show view mode with Edit button
+- Two-column grid for address fields (Street + Landmark, City + State, Country + Pincode)
+- Cancel button only shown when editing an existing profile — not when creating first time
+- Required fields marked with * in label
+
+### Navbar profile routing — role-aware
+- CHEF → navigate to /chef/profile/setup
+- CUSTOMER → navigate to /profile
+- Single line: navigate(user?.role === 'CHEF' ? '/chef/profile/setup' : '/profile')
+
+### Key concept — 404 as feature
+The GET /api/customer/profile endpoint returns 404 when no profile exists.
+The frontend catches this error and sets isNewProfile = true.
+This is intentional — 404 means "resource does not exist yet" which is semantically correct.
+No need for a separate "check if profile exists" endpoint.
+
+### Files created
+- server/controllers/customerController.js
+- server/routes/customer.js
+- client/src/services/customerService.js
+- client/src/pages/customer/CustomerProfilePage.jsx
+- client/src/pages/customer/CustomerProfilePage.module.css
+
+### Files modified
+- server/prisma/schema.prisma — CustomerProfile model + User relation
+- server/index.js — customer route registered at /api/customer
+- client/src/App.jsx — /profile route added
+- client/src/components/layout/Navbar.jsx — role-aware profile navigation

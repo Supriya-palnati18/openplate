@@ -98,7 +98,7 @@ function Navbar() {
                   <div className={styles.dropdownDivider} />
                   <button
                     className={styles.dropdownItem}
-                    onClick={() => { setDropdownOpen(false); navigate('/chef/profile/setup') }}
+                    onClick={() => { setDropdownOpen(false); navigate(user?.role === 'CHEF' ? '/chef/profile/setup' : '/profile') }}
                   >
                     <IconUser size={15} stroke={1.5} /> Profile
                   </button>
